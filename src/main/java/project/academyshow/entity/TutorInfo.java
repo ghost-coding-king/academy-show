@@ -18,4 +18,8 @@ public class TutorInfo {
     )
     @Column(name = "subject")
     private List<String> subjects;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
 }
