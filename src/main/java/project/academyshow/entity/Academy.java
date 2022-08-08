@@ -38,4 +38,8 @@ public class Academy {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "registration_file_id")
     private FileInfo businessRegistration;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
 }
