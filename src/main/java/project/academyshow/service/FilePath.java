@@ -4,7 +4,7 @@ import lombok.Getter;
 
 @Getter
 public enum FilePath {
-    FROM_POST("/진짜경로1"), FROM_ACADEMY("/진짜경로2"), FROM_TUTOR("/진짜경로3");
+    FROM_POST("/Users/woo/upload-test"), FROM_ACADEMY("/경로2"), FROM_TUTOR("/경로3");
 
     private final String path;
     FilePath(String path) {
