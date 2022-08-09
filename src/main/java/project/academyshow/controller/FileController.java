@@ -5,13 +5,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import project.academyshow.service.FilePath;
 import project.academyshow.service.FileService;
 
 import java.io.IOException;
 
 @Slf4j
-@CrossOrigin("*")
 @RestController
 @RequiredArgsConstructor
 public class FileController {
@@ -27,7 +25,7 @@ public class FileController {
     @PostMapping("/files")
     public String uploadFile(@RequestBody MultipartFile file) throws IOException {
         log.debug("uploadFile");
-        return fileService.upload(file, FilePath.FROM_POST);
+        return fileService.upload(file);
     }
 }
 
