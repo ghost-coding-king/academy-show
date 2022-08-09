@@ -13,7 +13,9 @@ public class Member {
     private String password;
     private String name;
     private String email;
+    private String phone;
     private LocalDate birth;
+    private String address;
 
     @Enumerated(EnumType.STRING)
     private RoleType role;

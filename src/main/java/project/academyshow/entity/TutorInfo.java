@@ -11,13 +11,11 @@ public class TutorInfo {
 
     private String scholarship;
 
-    @ElementCollection
-    @CollectionTable(
-            name = "tutor_subject",
-            joinColumns = @JoinColumn(name = "id")
-    )
-    @Column(name = "subject")
-    private List<String> subjects;
+    @OneToMany(mappedBy = "tutorInfo")
+    private List<TutorSubject> subjects;
+
+    @OneToMany(mappedBy = "tutorInfo")
+    private List<TutorEducation> educations;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
