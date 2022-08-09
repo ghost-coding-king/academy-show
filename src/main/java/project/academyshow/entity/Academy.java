@@ -16,22 +16,11 @@ public class Academy {
 
     private String address;
 
-    @ElementCollection
-    @CollectionTable(
-            name = "academy_subject",
-            joinColumns = @JoinColumn(name = "id")
-    )
-    @Column(name = "subject")
-    private List<String> subjects;
+    @OneToMany(mappedBy = "academy")
+    private List<AcademySubject> subjects;
 
-    @Enumerated(EnumType.STRING)
-    @ElementCollection
-    @CollectionTable(
-            name = "academy_education",
-            joinColumns = @JoinColumn(name = "id")
-    )
-    @Column(name = "education")
-    private List<Education> educations;
+    @OneToMany(mappedBy = "academy")
+    private List<AcademyEducation> educations;
 
     private boolean shuttle;
 
