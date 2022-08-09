@@ -32,3 +32,14 @@ logging.level:
 
 server:
   port: 8081
+
+# cors 설정
+cors:
+  allowed-origins: 'http://localhost:8080'
+  allowed-methods: '*'
+  allowed-headers: '*'
+  max-age: 3600
+
+# app property
+app:
+  filePath: '/Users/woo/upload-test'

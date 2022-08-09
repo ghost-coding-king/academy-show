@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import project.academyshow.config.AppProperties;
 import project.academyshow.entity.FileInfo;
 import project.academyshow.repository.FileInfoRepository;
 
@@ -19,8 +20,9 @@ import java.util.Optional;
 public class FileService {
 
     private final FileInfoRepository fileInfoRepository;
+    private final AppProperties appProperties;
 
-    public String upload(MultipartFile file, FilePath path) throws IOException {
+    public String upload(MultipartFile file) throws IOException {
         if (file.isEmpty()) {
             return null;
         }
@@ -28,20 +30,22 @@ public class FileService {
         assert originalFileName != null;
         // 확장자 추출
         String ext = originalFileName.substring(originalFileName.lastIndexOf("."));
+        // 파일 저장 경로
+        String filePath = appProperties.getFilePath();
         // FileInfo Entity 생성
         FileInfo fileInfo = FileInfo.builder()
-                .path(path)
+                .path(filePath)
                 .size(file.getSize())
                 .ext(ext).build();
 
         // Insert
         fileInfoRepository.save(fileInfo);
         // File upload
-        File newFile = new File(path.getPath(), fileInfo.getId() + ext);
+        File newFile = new File(filePath, fileInfo.getId() + ext);
         if (!newFile.exists()) newFile.mkdirs();
         file.transferTo(newFile);
 
-        log.debug("upload, saved id = {}", fileInfo.getId());
+        log.debug("upload. saved id = {}, path = {}", fileInfo.getId(), newFile.getPath());
 
         return "http://localhost:8081/files/" + fileInfo.getId();
     }
@@ -50,10 +54,15 @@ public class FileService {
         Optional<FileInfo> fileInfo = fileInfoRepository.findById(id);
         if (fileInfo.isPresent()) {
             FileInfo f = fileInfo.get();
-            log.debug("getFile id = {}", id);
-            return new File(f.getPath().getPath(), f.getId() + f.getExt());
+            String filePath = appProperties.getFilePath();
+
+            log.debug("getFile. id = {}, path = {}", id, filePath + "/" + f.getId() + f.getExt());
+
+            return new File(filePath, f.getId() + f.getExt());
         }
-        log.warn("getFile, id({}) not exist", id);
+
+        log.warn("getFile. id({}) not exist", id);
+
         return null;
     }
 }
