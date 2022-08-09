@@ -1,21 +1,33 @@
 package project.academyshow.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.util.FileCopyUtils;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import project.academyshow.service.FilePath;
 import project.academyshow.service.FileService;
 
-import java.io.File;
+import java.io.IOException;
 
+@Slf4j
+@CrossOrigin("*")
 @RestController
 @RequiredArgsConstructor
 public class FileController {
 
     private final FileService fileService;
 
-    @GetMapping("/files/{id}")
-    public File getFile(@PathVariable("id") Long id) {
-        return fileService.getFile(id);
+    @GetMapping(value = "/files/{id}")
+    public byte[] getFile(@PathVariable("id") Long id) throws IOException {
+        log.debug("getFile id = {}", id);
+        return FileCopyUtils.copyToByteArray(fileService.getFile(id));
+    }
+
+    @PostMapping("/files")
+    public String uploadFile(@RequestBody MultipartFile file) throws IOException {
+        log.debug("uploadFile");
+        return fileService.upload(file, FilePath.FROM_POST);
     }
 }
+

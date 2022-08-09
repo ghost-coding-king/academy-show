@@ -18,8 +18,6 @@ public class FileInfo {
     @Id @GeneratedValue
     private Long id;
 
-    private String originalFileName;
-
     @Enumerated(EnumType.STRING)
     private FilePath path;
     private long size;
