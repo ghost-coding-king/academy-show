@@ -1,9 +1,16 @@
 package project.academyshow.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Member {
 
     @Id @GeneratedValue
@@ -19,6 +26,9 @@ public class Member {
 
     @Enumerated(EnumType.STRING)
     private RoleType role;
+
+    @Enumerated
+    private ProviderType providerType;
 
     @Enumerated(EnumType.STRING)
     private MemberStatus status;
