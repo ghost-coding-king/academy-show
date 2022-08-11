@@ -43,3 +43,7 @@ cors:
 # app property
 app:
   filePath: '/Users/woo/upload-test'
+
+# jwt secret key
+jwt:
+  secret: 'jwt-secret'
