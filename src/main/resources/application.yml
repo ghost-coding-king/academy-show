@@ -47,3 +47,4 @@ app:
 # jwt secret key
 jwt:
   secret: 'jwt-secret'
+  token-validity-in-seconds: 1800
