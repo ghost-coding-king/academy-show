@@ -2,7 +2,6 @@ package project.academyshow.security.filter;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -10,6 +9,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 import project.academyshow.security.token.AuthToken;
 import project.academyshow.security.token.AuthTokenProvider;
+import project.academyshow.util.HeaderUtil;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -26,7 +26,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String token = resolveToken(request);
+        String token = HeaderUtil.resolveToken(request);
         if (!StringUtils.hasText(token)) {
             log.debug("토큰 정보 없음");
         }
@@ -42,16 +42,5 @@ public class AuthTokenFilter extends OncePerRequestFilter {
         }
 
         filterChain.doFilter(request, response);
-    }
-
-    /** Http header 에서 Jwt string 파싱 */
-    private String resolveToken(HttpServletRequest request) {
-        String bearerToken = request.getHeader(HttpHeaders.AUTHORIZATION);
-
-        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(AuthToken.TOKEN_PREFIX)) {
-            return bearerToken.substring(AuthToken.TOKEN_PREFIX.length());
-        }
-
-        return null;
     }
 }
