@@ -71,7 +71,7 @@ public class AuthService {
 
             AuthToken accessToken = tokenProvider.generateToken(authenticate);
             AuthToken newRefreshToken = tokenProvider.generateRefreshToken(username);
-            Optional<RefreshToken> oldRefreshToken = refreshTokenRepository.findByUsernameAndToken(username, password);
+            Optional<RefreshToken> oldRefreshToken = refreshTokenRepository.findByUsername(username);
 
             if (oldRefreshToken.isPresent()) {
                 oldRefreshToken.get().setToken(newRefreshToken.getToken());
@@ -130,7 +130,7 @@ public class AuthService {
         }
 
         List<SimpleGrantedAuthority> authorities =
-                Arrays.stream(claims.get(AuthTokenProvider.TOKEN_PREFIX).toString().split(","))
+                Arrays.stream(claims.get(AuthTokenProvider.AUTHORITIES_KEY).toString().split(","))
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toList());
 

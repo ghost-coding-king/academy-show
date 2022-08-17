@@ -2,7 +2,6 @@ package project.academyshow.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import project.academyshow.controller.request.LoginRequest;
@@ -35,7 +34,7 @@ public class AuthController {
                                    @RequestBody LoginRequest loginRequest) {
         AuthToken accessToken = authService.login(request, response, loginRequest);
 
-        return accessToken == null ? ResponseEntity.status(HttpStatus.UNAUTHORIZED).build() :
+        return accessToken == null ? ResponseEntity.ok(ApiResponse.authenticateFailed()) :
                 ResponseEntity.ok()
                         .header(HttpHeaders.AUTHORIZATION, accessToken.getToken())
                         .body(ApiResponse.success(null));
@@ -46,7 +45,7 @@ public class AuthController {
     public ResponseEntity<?> refreshToken(HttpServletRequest request,
                                           HttpServletResponse response) {
         AuthToken accessToken = authService.refresh(request, response);
-        return accessToken == null ? ResponseEntity.status(HttpStatus.UNAUTHORIZED).build() :
+        return accessToken == null ? ResponseEntity.ok(ApiResponse.authenticateFailed()) :
                 ResponseEntity.ok()
                         .header(HttpHeaders.AUTHORIZATION, accessToken.getToken())
                         .body(ApiResponse.success(null));

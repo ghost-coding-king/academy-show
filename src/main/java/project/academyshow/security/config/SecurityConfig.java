@@ -66,6 +66,7 @@ public class SecurityConfig {
                     .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                     .antMatchers("/auth/sign-up").permitAll()
                     .antMatchers("/auth/login").permitAll()
+                    .antMatchers("/auth/refresh").permitAll()
                     .anyRequest().authenticated();
 
         /* jwtTokenFilter 등록 */

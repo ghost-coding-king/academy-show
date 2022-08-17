@@ -21,13 +21,13 @@ public class AuthTokenProvider {
     private final Key refreshTokenKey;
     public final long tokenValidityInMilliseconds;
     public final long refreshTokenValidityInMilliseconds;
-    private static final String AUTHORITIES_KEY = "role";
+    public static final String AUTHORITIES_KEY = "role";
     public static final String TOKEN_PREFIX = "Bearer ";
 
     public AuthTokenProvider(@Value("${jwt.secret}") String secret,
-                             @Value("${refresh-token-secret}") String refreshTokenSecret,
+                             @Value("${jwt.refresh-token-secret}") String refreshTokenSecret,
                              @Value("${jwt.token-validity-in-seconds}") long validityInSeconds,
-                             @Value("{refresh-token-validity-in-seconds}") long refreshTokenValidityInSeconds) {
+                             @Value("${jwt.refresh-token-validity-in-seconds}") long refreshTokenValidityInSeconds) {
         this.key = Keys.hmacShaKeyFor(secret.getBytes());
         this.refreshTokenKey = Keys.hmacShaKeyFor(refreshTokenSecret.getBytes());
         this.tokenValidityInMilliseconds = validityInSeconds * 1000;

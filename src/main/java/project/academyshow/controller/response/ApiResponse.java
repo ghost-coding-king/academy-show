@@ -23,4 +23,8 @@ public class ApiResponse<T> {
         return new ApiResponse<>(200, "success", data);
     }
 
+    public static <T> ApiResponse<T> authenticateFailed() {
+        return new ApiResponse<>(401, "자격증명에 실패하였습니다.", null);
+    }
+
 }
