@@ -76,7 +76,7 @@ public class AuthToken {
         Claims claims = getTokenClaims();
 
         List<SimpleGrantedAuthority> authorities =
-                Arrays.stream(claims.get(AuthTokenProvider.TOKEN_PREFIX).toString().split(","))
+                Arrays.stream(claims.get(AuthTokenProvider.AUTHORITIES_KEY).toString().split(","))
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
 

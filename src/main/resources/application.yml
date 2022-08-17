@@ -44,9 +44,9 @@ cors:
 app:
   filePath: '/Users/woo/upload-test'
 
-# jwt secret key
+# jwt
 jwt:
   secret: 'jwt-secret'
   refresh-token-secret: 'refresh-jwt-secret'
   token-validity-in-seconds: 1800
-  refresh-token-validity-in-seconds: 3600 * 24 * 7
+  refresh-token-validity-in-seconds: 604800
