@@ -5,7 +5,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import project.academyshow.controller.request.LoginRequest;
-import project.academyshow.controller.request.SignUpRequest;
+import project.academyshow.controller.request.UserSignUpRequest;
 import project.academyshow.controller.response.ApiResponse;
 import project.academyshow.security.token.AuthToken;
 import project.academyshow.service.AuthService;
@@ -21,9 +21,9 @@ public class AuthController {
     private final AuthService authService;
 
     /** 회원가입 */
-    @PostMapping("/sign-up")
-    public ResponseEntity<?> signUp(@RequestBody SignUpRequest signUpRequest) {
-        authService.signUp(signUpRequest);
+    @PostMapping("/sign-up/user")
+    public ResponseEntity<?> userSignUp(@RequestBody UserSignUpRequest userSignUpRequest) {
+        authService.userSignUp(userSignUpRequest);
         return ResponseEntity.ok(ApiResponse.success(null));
     }
 

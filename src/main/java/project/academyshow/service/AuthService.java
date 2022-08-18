@@ -12,9 +12,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import project.academyshow.controller.request.LoginRequest;
-import project.academyshow.controller.request.SignUpRequest;
+import project.academyshow.controller.request.UserSignUpRequest;
 import project.academyshow.entity.Member;
+import project.academyshow.entity.ProviderType;
 import project.academyshow.entity.RefreshToken;
+import project.academyshow.entity.RoleType;
 import project.academyshow.repository.MemberRepository;
 import project.academyshow.repository.RefreshTokenRepository;
 import project.academyshow.security.token.AuthToken;
@@ -45,10 +47,16 @@ public class AuthService {
     private final static String REFRESH_TOKEN = "refresh_token";
 
     /** 회원가입 */
-    public void signUp(SignUpRequest signUpRequest) {
+    public void userSignUp(UserSignUpRequest request) {
         Member newMember = Member.builder()
-                .username(signUpRequest.getUsername())
-                .password(passwordEncoder.encode(signUpRequest.getPassword()))
+                .username(request.getUsername())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .name(request.getName())
+                .phone(request.getPhone())
+                .birth(request.getBirth())
+                .address(request.getAddress())
+                .role(RoleType.ROLE_MEMBER)
+                .providerType(ProviderType.LOCAL)
                 .build();
 
         memberRepository.save(newMember);
