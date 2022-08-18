@@ -1,7 +1,6 @@
 package project.academyshow.entity;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 public class Post {
@@ -23,7 +22,4 @@ public class Post {
     private Academy academy;
 
     private int star;
-
-    @OneToMany(mappedBy = "post")
-    private List<FileInfo> files;
 }

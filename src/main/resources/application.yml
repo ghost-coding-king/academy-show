@@ -27,7 +27,27 @@ spring:
       enabled: true
 
 logging.level:
+  project.academyshow: debug
   org.hibernate.SQL: debug
 
 server:
   port: 8081
+
+# cors 설정
+cors:
+  allowed-origins: 'http://localhost:8080'
+  allowed-methods: '*'
+  allowed-headers: '*'
+  exposed-headers: '*'
+  max-age: 3600
+
+# app property
+app:
+  filePath: '/Users/woo/upload-test'
+
+# jwt
+jwt:
+  secret: 'jwt-secret'
+  refresh-token-secret: 'refresh-jwt-secret'
+  token-validity-in-seconds: 1800
+  refresh-token-validity-in-seconds: 604800

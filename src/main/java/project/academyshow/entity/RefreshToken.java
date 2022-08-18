@@ -1,22 +1,22 @@
 package project.academyshow.entity;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 @Entity
-@Getter
+@Builder
 @NoArgsConstructor
-public class Subject {
+@AllArgsConstructor
+public class RefreshToken {
 
     @Id @GeneratedValue
     private Long id;
-    private String name;
 
-    public Subject(String name) {
-        this.name = name;
-    }
+    @Getter @Setter
+    private String token;
+
+    private String username;
 }
