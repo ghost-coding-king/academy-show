@@ -1,5 +1,6 @@
 package project.academyshow.controller;
 
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -29,8 +30,13 @@ public class AuthController {
 
     /** username 중복 확인 */
     @PostMapping("/sign-up/username-check")
-    public ApiResponse<?> usernameCheck(@RequestBody String username) {
-        return ApiResponse.success(authService.usernameCheck(username));
+    public ApiResponse<?> usernameCheck(@RequestBody SimpleUsernameRequest request) {
+        return ApiResponse.success(authService.usernameCheck(request.getUsername()));
+    }
+
+    @Data
+    private static class SimpleUsernameRequest {
+        private String username;
     }
 
     /** 로그인 */
