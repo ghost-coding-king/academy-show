@@ -27,8 +27,9 @@ public class AuthController {
         return ResponseEntity.ok(ApiResponse.success(null));
     }
 
+    /** username 중복 확인 */
     @PostMapping("/sign-up/username-check")
-    public ApiResponse<?> usernameCheck(String username) {
+    public ApiResponse<?> usernameCheck(@RequestBody String username) {
         return ApiResponse.success(authService.usernameCheck(username));
     }
 
