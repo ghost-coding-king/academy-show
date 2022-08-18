@@ -63,12 +63,16 @@ public class AuthService {
         String password = loginRequest.getPassword();
 
         try {
+            /* username, password 검증 */
             Authentication authenticate = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         username,
                         password
-                ));
+                )
+            );
 
+            /* AccessToken, Refresh Token 발급 */
+            /* 로그인 시, Refresh Token 도 재발급함 */
             AuthToken accessToken = tokenProvider.generateToken(authenticate);
             AuthToken newRefreshToken = tokenProvider.generateRefreshToken(username);
             Optional<RefreshToken> oldRefreshToken = refreshTokenRepository.findByUsername(username);
@@ -83,6 +87,7 @@ public class AuthService {
                         .token(newRefreshToken.getToken()).build());
             }
 
+            /* Refresh Token 쿠키에 등록 */
             int cookieMaxAge = (int) tokenProvider.refreshTokenValidityInMilliseconds / 60;
             CookieUtil.deleteCookie(request, response, REFRESH_TOKEN);
             CookieUtil.addCookie(response, REFRESH_TOKEN, newRefreshToken.getToken(), cookieMaxAge);
@@ -95,8 +100,9 @@ public class AuthService {
     }
 
     /** Refresh Token 으로 Access Token 재발급
-     * Refresh Token 의 만료기간이 3일 이내이면 Refresh Token 도 재발급 */
+     * Refresh Token 의 만료가 3일 이내이면 Refresh Token 도 재발급 */
     public AuthToken refresh(HttpServletRequest request, HttpServletResponse response) {
+        /* 요청에 담긴 Access Token, Refresh Token 획득 및 검증 */
         String accessTokenString = HeaderUtil.resolveToken(request);
         AuthToken accessToken = tokenProvider.convertToAuthToken(accessTokenString);
 
@@ -107,16 +113,20 @@ public class AuthService {
                 .map(Cookie::getValue)
                 .orElse((null));
 
+        /* Refresh Token 존재 여부 */
         if (!StringUtils.hasText(refreshTokenString)) return null;
 
+        /* DB 에 등록된 정보를 통해 검증 */
         Optional<RefreshToken> oldRefreshToken = refreshTokenRepository
                 .findByUsernameAndToken(username, refreshTokenString);
 
         if (oldRefreshToken.isEmpty()) return null;
 
+        /* 유효한 Refresh Token 인지 확인 */
         AuthToken refreshToken = tokenProvider.convertToRefreshAuthToken(refreshTokenString);
         if (!refreshToken.isValid()) return null;
 
+        /* Refresh Token 의 유효기간이 3일 이내로 남은 경우 재발급 */
         Date now = new Date();
         long validTime = refreshToken.getTokenClaims().getExpiration().getTime() - now.getTime();
 
@@ -129,6 +139,7 @@ public class AuthService {
             CookieUtil.addCookie(response, REFRESH_TOKEN, newRefreshToken.getToken(), cookieMaxAge);
         }
 
+        /* Access Token 발급 */
         List<SimpleGrantedAuthority> authorities =
                 Arrays.stream(claims.get(AuthTokenProvider.AUTHORITIES_KEY).toString().split(","))
                         .map(SimpleGrantedAuthority::new)

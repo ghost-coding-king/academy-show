@@ -64,9 +64,7 @@ public class SecurityConfig {
                     /* URI 기반 인증/인가 설정 */
                     .authorizeRequests()
                     .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-                    .antMatchers("/auth/sign-up").permitAll()
-                    .antMatchers("/auth/login").permitAll()
-                    .antMatchers("/auth/refresh").permitAll()
+                    .antMatchers("/auth/**").permitAll()
                     .anyRequest().authenticated();
 
         /* jwtTokenFilter 등록 */
@@ -96,6 +94,7 @@ public class SecurityConfig {
         corsConfig.setAllowedHeaders(Arrays.asList(corsProperties.getAllowedHeaders().split(",")));
         corsConfig.setAllowedMethods(Arrays.asList(corsProperties.getAllowedMethods().split(",")));
         corsConfig.setAllowedOrigins(Arrays.asList(corsProperties.getAllowedOrigins().split(",")));
+        corsConfig.setExposedHeaders(Arrays.asList(corsProperties.getExposedHeaders().split(",")));
         corsConfig.setMaxAge(corsProperties.getMaxAge());
         corsConfig.setAllowCredentials(true);
 
