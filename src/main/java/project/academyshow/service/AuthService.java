@@ -27,11 +27,9 @@ import project.academyshow.util.HeaderUtil;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -60,6 +58,10 @@ public class AuthService {
                 .build();
 
         memberRepository.save(newMember);
+    }
+
+    public boolean usernameCheck(String username) {
+        return memberRepository.findByUsername(username).isPresent();
     }
 
     /** 로그인
@@ -127,7 +129,6 @@ public class AuthService {
         /* DB 에 등록된 정보를 통해 검증 */
         Optional<RefreshToken> oldRefreshToken = refreshTokenRepository
                 .findByUsernameAndToken(username, refreshTokenString);
-
         if (oldRefreshToken.isEmpty()) return null;
 
         /* 유효한 Refresh Token 인지 확인 */
@@ -148,14 +149,15 @@ public class AuthService {
         }
 
         /* Access Token 발급 */
-        List<SimpleGrantedAuthority> authorities =
-                Arrays.stream(claims.get(AuthTokenProvider.AUTHORITIES_KEY).toString().split(","))
-                        .map(SimpleGrantedAuthority::new)
-                        .collect(Collectors.toList());
+        Optional<Member> nowMember = memberRepository.findByUsername(username);
+        if (nowMember.isEmpty()) return null;
 
-        User principal = new User(claims.getSubject(), "", authorities);
+        List<SimpleGrantedAuthority> authorities =
+                List.of(new SimpleGrantedAuthority(nowMember.get().getRole().toString()));
+        User principal = new User(username, "", authorities);
         Authentication authentication = new UsernamePasswordAuthenticationToken(principal, "", authorities);
 
         return tokenProvider.generateToken(authentication);
     }
+
 }

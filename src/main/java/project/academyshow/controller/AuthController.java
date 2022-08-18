@@ -27,6 +27,11 @@ public class AuthController {
         return ResponseEntity.ok(ApiResponse.success(null));
     }
 
+    @PostMapping("/sign-up/username-check")
+    public ApiResponse<?> usernameCheck(String username) {
+        return ApiResponse.success(authService.usernameCheck(username));
+    }
+
     /** 로그인 */
     @PostMapping("/login")
     public ResponseEntity<?> login(HttpServletRequest request,
