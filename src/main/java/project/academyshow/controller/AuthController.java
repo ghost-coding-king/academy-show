@@ -31,9 +31,8 @@ public class AuthController {
 
     /** 학원 회원가입 */
     @PostMapping("/sign-up/academy")
-    public ApiResponse<?> academySignUp(@RequestBody UserSignUpRequest userSignUpRequest,
-                                        @RequestBody AcademySignUpRequest academySignUpRequest) {
-        authService.academySignUp(userSignUpRequest, academySignUpRequest);
+    public ApiResponse<?> academySignUp(@RequestBody AcademySignUpRequest academySignUpRequest) {
+        authService.academySignUp(academySignUpRequest.getUserInfo(), academySignUpRequest.getAcademyInfo());
         return ApiResponse.success(null);
     }
 
