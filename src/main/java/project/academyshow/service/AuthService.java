@@ -11,12 +11,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
+import project.academyshow.controller.request.AcademySignUpRequest;
 import project.academyshow.controller.request.LoginRequest;
 import project.academyshow.controller.request.UserSignUpRequest;
-import project.academyshow.entity.Member;
-import project.academyshow.entity.ProviderType;
-import project.academyshow.entity.RefreshToken;
-import project.academyshow.entity.RoleType;
+import project.academyshow.entity.*;
+import project.academyshow.repository.AcademyRepository;
 import project.academyshow.repository.MemberRepository;
 import project.academyshow.repository.RefreshTokenRepository;
 import project.academyshow.security.token.AuthToken;
@@ -30,6 +29,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -41,23 +41,56 @@ public class AuthService {
     private final AuthTokenProvider tokenProvider;
     private final MemberRepository memberRepository;
     private final RefreshTokenRepository refreshTokenRepository;
+    private final AcademyRepository academyRepository;
     private final static long THREE_DAYS_IN_MILLISECONDS = 259200000;
     private final static String REFRESH_TOKEN = "refresh_token";
 
     /** 회원가입 */
-    public void userSignUp(UserSignUpRequest request) {
+    public void userSignUp(UserSignUpRequest userInfo) {
+        memberRegistration(userInfo, RoleType.ROLE_MEMBER);
+    }
+
+    // TODO: 해야됨
+    public void academySignUp(UserSignUpRequest userInfo, AcademySignUpRequest academyInfo) {
+        /* 회원 기본 정보 */
+        Member savedMember = memberRegistration(userInfo, RoleType.ROLE_ACADEMY);
+
+        /* 학원 정보 */
+        String educations = academyInfo.getEducations().stream()
+                .map(Enum::toString)
+                .collect(Collectors.joining(","));
+
+        String subjects = academyInfo.getSubjects().stream()
+                .map(Subject::getName)
+                .collect(Collectors.joining(","));
+
+        Academy academy = Academy.builder()
+                .member(savedMember)
+                .businessRegistration(academyInfo.getRegistrationFile())
+                .address(academyInfo.getAcademyAddress())
+                .name(academyInfo.getAcademyName())
+                .shuttle(academyInfo.isShuttle())
+                .introduce(academyInfo.getIntroduce())
+                .educations(educations)
+                .subjects(subjects)
+                .build();
+
+        academyRepository.save(academy);
+    }
+
+    private Member memberRegistration(UserSignUpRequest userInfo, RoleType role) {
         Member newMember = Member.builder()
-                .username(request.getUsername())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .name(request.getName())
-                .phone(request.getPhone())
-                .birth(request.getBirth())
-                .address(request.getAddress())
-                .role(RoleType.ROLE_MEMBER)
+                .username(userInfo.getUsername())
+                .password(passwordEncoder.encode(userInfo.getPassword()))
+                .name(userInfo.getName())
+                .phone(userInfo.getPhone())
+                .birth(userInfo.getBirth())
+                .address(userInfo.getAddress())
+                .role(role)
                 .providerType(ProviderType.LOCAL)
                 .build();
 
-        memberRepository.save(newMember);
+        return memberRepository.save(newMember);
     }
 
     public boolean usernameCheck(String username) {
@@ -68,9 +101,9 @@ public class AuthService {
      * @return AuthToken */
     public AuthToken login(HttpServletRequest request,
                            HttpServletResponse response,
-                           LoginRequest loginRequest) {
-        String username = loginRequest.getUsername();
-        String password = loginRequest.getPassword();
+                           LoginRequest loginInfo) {
+        String username = loginInfo.getUsername();
+        String password = loginInfo.getPassword();
 
         try {
             /* username, password 검증 */
@@ -159,5 +192,4 @@ public class AuthService {
 
         return tokenProvider.generateToken(authentication);
     }
-
 }

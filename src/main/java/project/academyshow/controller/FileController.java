@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import project.academyshow.controller.response.ApiResponse;
 import project.academyshow.service.FileService;
 
 import java.io.IOException;
@@ -24,9 +25,9 @@ public class FileController {
     }
 
     @PostMapping("/files")
-    public String uploadFile(@RequestBody MultipartFile file) throws IOException {
+    public ApiResponse<?> uploadFile(@RequestBody MultipartFile file) throws IOException {
         log.debug("uploadFile");
-        return fileService.upload(file);
+        return ApiResponse.success(fileService.upload(file));
     }
 }
 
