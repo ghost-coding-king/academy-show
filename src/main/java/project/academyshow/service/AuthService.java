@@ -11,7 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
-import project.academyshow.controller.request.AcademySignUpRequest;
+import project.academyshow.controller.request.AcademyInfo;
 import project.academyshow.controller.request.LoginRequest;
 import project.academyshow.controller.request.UserSignUpRequest;
 import project.academyshow.entity.*;
@@ -45,13 +45,13 @@ public class AuthService {
     private final static long THREE_DAYS_IN_MILLISECONDS = 259200000;
     private final static String REFRESH_TOKEN = "refresh_token";
 
-    /** 회원가입 */
+    /** 일반 회원가입 */
     public void userSignUp(UserSignUpRequest userInfo) {
         memberRegistration(userInfo, RoleType.ROLE_MEMBER);
     }
 
-    // TODO: 해야됨
-    public void academySignUp(UserSignUpRequest userInfo, AcademySignUpRequest academyInfo) {
+    /** 학원 회원가입 */
+    public void academySignUp(UserSignUpRequest userInfo, AcademyInfo academyInfo) {
         /* 회원 기본 정보 */
         Member savedMember = memberRegistration(userInfo, RoleType.ROLE_ACADEMY);
 
