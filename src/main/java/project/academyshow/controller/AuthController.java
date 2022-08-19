@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import project.academyshow.controller.request.AcademySignUpRequest;
 import project.academyshow.controller.request.LoginRequest;
+import project.academyshow.controller.request.TutorSignUpRequest;
 import project.academyshow.controller.request.UserSignUpRequest;
 import project.academyshow.controller.response.ApiResponse;
 import project.academyshow.security.token.AuthToken;
@@ -33,6 +34,13 @@ public class AuthController {
     @PostMapping("/sign-up/academy")
     public ApiResponse<?> academySignUp(@RequestBody AcademySignUpRequest academySignUpRequest) {
         authService.academySignUp(academySignUpRequest.getUserInfo(), academySignUpRequest.getAcademyInfo());
+        return ApiResponse.success(null);
+    }
+
+    /** 괴외 회원가입 */
+    @PostMapping("/sign-up/tutor")
+    public ApiResponse<?> tutorSignUp(@RequestBody TutorSignUpRequest tutorSignUpRequest) {
+        authService.tutorSignUp(tutorSignUpRequest.getUserInfo(), tutorSignUpRequest.getTutorInfo());
         return ApiResponse.success(null);
     }
 

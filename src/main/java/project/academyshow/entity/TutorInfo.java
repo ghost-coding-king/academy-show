@@ -1,21 +1,29 @@
 package project.academyshow.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class TutorInfo {
 
     @Id @GeneratedValue
     private Long id;
 
+    // 대학
     private String scholarship;
 
-    @OneToMany(mappedBy = "tutorInfo")
-    private List<TutorSubject> subjects;
+    private String certification;
 
-    @OneToMany(mappedBy = "tutorInfo")
-    private List<TutorEducation> educations;
+    private String subjects;
+
+    private String educations;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")

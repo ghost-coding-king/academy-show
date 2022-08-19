@@ -13,11 +13,13 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import project.academyshow.controller.request.AcademyInfo;
 import project.academyshow.controller.request.LoginRequest;
+import project.academyshow.controller.request.TutorRequest;
 import project.academyshow.controller.request.UserSignUpRequest;
 import project.academyshow.entity.*;
 import project.academyshow.repository.AcademyRepository;
 import project.academyshow.repository.MemberRepository;
 import project.academyshow.repository.RefreshTokenRepository;
+import project.academyshow.repository.TutorInfoRepository;
 import project.academyshow.security.token.AuthToken;
 import project.academyshow.security.token.AuthTokenProvider;
 import project.academyshow.util.CookieUtil;
@@ -42,6 +44,7 @@ public class AuthService {
     private final MemberRepository memberRepository;
     private final RefreshTokenRepository refreshTokenRepository;
     private final AcademyRepository academyRepository;
+    private final TutorInfoRepository tutorInfoRepository;
     private final static long THREE_DAYS_IN_MILLISECONDS = 259200000;
     private final static String REFRESH_TOKEN = "refresh_token";
 
@@ -74,6 +77,14 @@ public class AuthService {
                 .build();
 
         academyRepository.save(academy);
+    }
+
+    /** 과외 회원가입 */
+    public void tutorSignUp(UserSignUpRequest userInfo, TutorRequest tutorRequest) {
+        /* 회원 기본 정보 */
+        Member savedMember = memberRegistration(userInfo, RoleType.ROLE_TUTOR);
+
+        tutorInfoRepository.save(tutorRequest.toEntity(savedMember));
     }
 
     /** 개인 정보 등록 */
