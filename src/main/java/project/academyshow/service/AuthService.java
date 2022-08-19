@@ -56,9 +56,7 @@ public class AuthService {
         Member savedMember = memberRegistration(userInfo, RoleType.ROLE_ACADEMY);
 
         /* 학원 정보 */
-        String educations = academyInfo.getEducations().stream()
-                .map(Enum::toString)
-                .collect(Collectors.joining(","));
+        String educations = String.join(",", academyInfo.getEducations());
 
         String subjects = academyInfo.getSubjects().stream()
                 .map(Subject::getName)
@@ -78,6 +76,7 @@ public class AuthService {
         academyRepository.save(academy);
     }
 
+    /** 개인 정보 등록 */
     private Member memberRegistration(UserSignUpRequest userInfo, RoleType role) {
         Member newMember = Member.builder()
                 .username(userInfo.getUsername())
@@ -93,6 +92,7 @@ public class AuthService {
         return memberRepository.save(newMember);
     }
 
+    /** username 중복 확인 */
     public boolean usernameCheck(String username) {
         return memberRepository.findByUsername(username).isPresent();
     }

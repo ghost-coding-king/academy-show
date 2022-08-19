@@ -1,7 +1,6 @@
 package project.academyshow.controller.request;
 
 import lombok.Data;
-import project.academyshow.entity.Education;
 import project.academyshow.entity.Subject;
 
 import java.util.List;
@@ -11,7 +10,7 @@ import java.util.List;
 public class AcademyInfo {
 
     private String academyName;
-    private List<Education> educations;
+    private List<String> educations;
     private List<Subject> subjects;
     private boolean shuttle;
     private String academyAddress;
