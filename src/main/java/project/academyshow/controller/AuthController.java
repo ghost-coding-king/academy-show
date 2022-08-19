@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import project.academyshow.controller.request.AcademySignUpRequest;
 import project.academyshow.controller.request.LoginRequest;
 import project.academyshow.controller.request.UserSignUpRequest;
 import project.academyshow.controller.response.ApiResponse;
@@ -21,11 +22,19 @@ public class AuthController {
 
     private final AuthService authService;
 
-    /** 회원가입 */
+    /** 일반 회원가입 */
     @PostMapping("/sign-up/user")
-    public ResponseEntity<?> userSignUp(@RequestBody UserSignUpRequest userSignUpRequest) {
+    public ApiResponse<?> userSignUp(@RequestBody UserSignUpRequest userSignUpRequest) {
         authService.userSignUp(userSignUpRequest);
-        return ResponseEntity.ok(ApiResponse.success(null));
+        return ApiResponse.success(null);
+    }
+
+    /** 학원 회원가입 */
+    @PostMapping("/sign-up/academy")
+    public ApiResponse<?> academySignUp(@RequestBody UserSignUpRequest userSignUpRequest,
+                                        @RequestBody AcademySignUpRequest academySignUpRequest) {
+        authService.academySignUp(userSignUpRequest, academySignUpRequest);
+        return ApiResponse.success(null);
     }
 
     /** username 중복 확인 */
