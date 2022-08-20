@@ -4,7 +4,6 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.web.bind.annotation.*;
 import project.academyshow.controller.request.AcademySignUpRequest;
@@ -12,17 +11,13 @@ import project.academyshow.controller.request.LoginRequest;
 import project.academyshow.controller.request.TutorSignUpRequest;
 import project.academyshow.controller.request.UserSignUpRequest;
 import project.academyshow.controller.response.ApiResponse;
-import project.academyshow.entity.ProviderType;
 import project.academyshow.entity.RoleType;
 import project.academyshow.security.token.AuthToken;
-import project.academyshow.security.token.AuthTokenProvider;
 import project.academyshow.service.AuthService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
