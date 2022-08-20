@@ -31,7 +31,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -59,24 +58,7 @@ public class AuthService {
         Member savedMember = memberRegistration(userInfo, RoleType.ROLE_ACADEMY);
 
         /* 학원 정보 */
-        String educations = String.join(",", academyInfo.getEducations());
-
-        String subjects = academyInfo.getSubjects().stream()
-                .map(Subject::getName)
-                .collect(Collectors.joining(","));
-
-        Academy academy = Academy.builder()
-                .member(savedMember)
-                .businessRegistration(academyInfo.getRegistrationFile())
-                .address(academyInfo.getAcademyAddress())
-                .name(academyInfo.getAcademyName())
-                .shuttle(academyInfo.isShuttle())
-                .introduce(academyInfo.getIntroduce())
-                .educations(educations)
-                .subjects(subjects)
-                .build();
-
-        academyRepository.save(academy);
+        academyRepository.save(academyInfo.toEntity(savedMember));
     }
 
     /** 과외 회원가입 */
