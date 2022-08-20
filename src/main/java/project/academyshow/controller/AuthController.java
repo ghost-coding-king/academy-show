@@ -4,17 +4,25 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.web.bind.annotation.*;
 import project.academyshow.controller.request.AcademySignUpRequest;
 import project.academyshow.controller.request.LoginRequest;
 import project.academyshow.controller.request.TutorSignUpRequest;
 import project.academyshow.controller.request.UserSignUpRequest;
 import project.academyshow.controller.response.ApiResponse;
+import project.academyshow.entity.ProviderType;
+import project.academyshow.entity.RoleType;
 import project.academyshow.security.token.AuthToken;
+import project.academyshow.security.token.AuthTokenProvider;
 import project.academyshow.service.AuthService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -61,11 +69,26 @@ public class AuthController {
                                    HttpServletResponse response,
                                    @RequestBody LoginRequest loginRequest) {
         AuthToken accessToken = authService.login(request, response, loginRequest);
-
+        LoginResponse loginResponse = new LoginResponse();
+        loginResponse.setUsername(loginRequest.getUsername());
+        if (accessToken != null) {
+            loginResponse.setRole(
+                    RoleType.valueOf(
+                            new ArrayList<GrantedAuthority>(accessToken.getAuthentication().getAuthorities())
+                            .get(0).getAuthority()
+                    )
+            );
+        }
         return accessToken == null ? ResponseEntity.ok(ApiResponse.authenticateFailed()) :
                 ResponseEntity.ok()
                         .header(HttpHeaders.AUTHORIZATION, accessToken.getToken())
-                        .body(ApiResponse.success(null));
+                        .body(ApiResponse.success(loginResponse));
+    }
+
+    @Data
+    private static class LoginResponse {
+        private String username;
+        private RoleType role;
     }
 
     /** Access Token 재발급 */
