@@ -24,7 +24,11 @@ public class Member {
     private String email;
     private String phone;
     private LocalDate birth;
-    private String address;
+    private String postcode;
+    private String roadAddress;
+    private String jibunAddress;
+    private String subAddress;
+    private boolean isRoadAddress;
 
     @Enumerated(EnumType.STRING)
     private RoleType role;

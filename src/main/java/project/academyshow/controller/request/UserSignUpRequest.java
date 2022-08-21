@@ -19,7 +19,11 @@ public class UserSignUpRequest {
     private String name;
     private String phone;
     private LocalDate birth;
-    private String address;
+    private String postcode;
+    private String roadAddress;
+    private String jibunAddress;
+    private String subAddress;
+    private boolean isRoadAddress;
 
     public Member toEntity(PasswordEncoder passwordEncoder, RoleType role) {
         return Member.builder()
@@ -28,7 +32,11 @@ public class UserSignUpRequest {
                 .name(name)
                 .phone(phone)
                 .birth(birth)
-                .address(address)
+                .postcode(postcode)
+                .roadAddress(roadAddress)
+                .jibunAddress(jibunAddress)
+                .subAddress(subAddress)
+                .isRoadAddress(isRoadAddress)
                 .role(role)
                 .providerType(ProviderType.LOCAL)
                 .build();

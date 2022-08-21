@@ -16,7 +16,11 @@ public class AcademyInfo {
     private List<String> educations;
     private List<Subject> subjects;
     private boolean shuttle;
-    private String academyAddress;
+    private String academyPostcode;
+    private String academyRoadAddress;
+    private String academyJibunAddress;
+    private String academySubAddress;
+    private boolean academyIsRoadAddress;
     private String introduce;
     private String registrationFile;
 
@@ -30,7 +34,11 @@ public class AcademyInfo {
         return Academy.builder()
                 .member(savedMember)
                 .businessRegistration(registrationFile)
-                .address(academyAddress)
+                .postcode(academyPostcode)
+                .roadAddress(academyRoadAddress)
+                .jibunAddress(academyJibunAddress)
+                .subAddress(academySubAddress)
+                .isRoadAddress(academyIsRoadAddress)
                 .name(academyName)
                 .shuttle(shuttle)
                 .introduce(introduce)

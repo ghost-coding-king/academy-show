@@ -20,7 +20,11 @@ public class Academy {
     @Lob
     private String introduce;
 
-    private String address;
+    private String postcode;
+    private String roadAddress;
+    private String jibunAddress;
+    private String subAddress;
+    private boolean isRoadAddress;
 
     private String subjects;
 
