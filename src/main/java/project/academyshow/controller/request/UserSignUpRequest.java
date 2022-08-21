@@ -23,7 +23,7 @@ public class UserSignUpRequest {
     private String roadAddress;
     private String jibunAddress;
     private String subAddress;
-    private boolean isRoadAddress;
+    private boolean selectRoadAddress;
 
     public Member toEntity(PasswordEncoder passwordEncoder, RoleType role) {
         return Member.builder()
@@ -36,7 +36,7 @@ public class UserSignUpRequest {
                 .roadAddress(roadAddress)
                 .jibunAddress(jibunAddress)
                 .subAddress(subAddress)
-                .selectRoadAddress(isRoadAddress)
+                .selectRoadAddress(selectRoadAddress)
                 .role(role)
                 .providerType(ProviderType.LOCAL)
                 .build();

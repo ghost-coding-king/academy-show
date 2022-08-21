@@ -20,7 +20,7 @@ public class AcademyInfo {
     private String academyRoadAddress;
     private String academyJibunAddress;
     private String academySubAddress;
-    private boolean academyIsRoadAddress;
+    private boolean academySelectRoadAddress;
     private String introduce;
     private String registrationFile;
 
@@ -38,7 +38,7 @@ public class AcademyInfo {
                 .roadAddress(academyRoadAddress)
                 .jibunAddress(academyJibunAddress)
                 .subAddress(academySubAddress)
-                .selectRoadAddress(academyIsRoadAddress)
+                .selectRoadAddress(academySelectRoadAddress)
                 .name(academyName)
                 .shuttle(shuttle)
                 .introduce(introduce)

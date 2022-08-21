@@ -37,7 +37,7 @@ public class MemberController {
         private String roadAddress;
         private String jibunAddress;
         private String subAddress;
-        private boolean isRoadAddress;
+        private boolean selectRoadAddress;
 
         public MyInfo(Member member) {
             username = member.getUsername();
@@ -48,7 +48,7 @@ public class MemberController {
             roadAddress = member.getRoadAddress();
             jibunAddress = member.getJibunAddress();
             subAddress = member.getSubAddress();
-            isRoadAddress = member.isSelectRoadAddress();
+            selectRoadAddress = member.isSelectRoadAddress();
         }
     }
 }
