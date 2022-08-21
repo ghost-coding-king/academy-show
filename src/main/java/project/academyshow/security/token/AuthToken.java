@@ -3,15 +3,8 @@ package project.academyshow.security.token;
 import io.jsonwebtoken.*;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 
 import java.security.Key;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 public class AuthToken {
@@ -69,19 +62,5 @@ public class AuthToken {
         }
 
         return null;
-    }
-
-    /** 토큰 정보를 이용해 Authentication 객체 생성 */
-    public Authentication getAuthentication() {
-        Claims claims = getTokenClaims();
-
-        List<SimpleGrantedAuthority> authorities =
-                Arrays.stream(claims.get(AuthTokenProvider.AUTHORITIES_KEY).toString().split(","))
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
-
-        User principal = new User(claims.getSubject(), "", authorities);
-
-        return new UsernamePasswordAuthenticationToken(principal, "", authorities);
     }
 }
