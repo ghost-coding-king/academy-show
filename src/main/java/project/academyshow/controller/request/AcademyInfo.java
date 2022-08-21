@@ -21,7 +21,7 @@ public class AcademyInfo {
     private String registrationFile;
 
     public Academy toEntity(Member savedMember) {
-        String educations = String.join(",", this.getEducations());
+        String educations = String.join(",", this.educations);
 
         String subjects = this.getSubjects().stream()
                 .map(Subject::getName)
@@ -29,11 +29,11 @@ public class AcademyInfo {
 
         return Academy.builder()
                 .member(savedMember)
-                .businessRegistration(this.getRegistrationFile())
-                .address(this.getAcademyAddress())
-                .name(this.getAcademyName())
-                .shuttle(this.isShuttle())
-                .introduce(this.getIntroduce())
+                .businessRegistration(registrationFile)
+                .address(academyAddress)
+                .name(academyName)
+                .shuttle(shuttle)
+                .introduce(introduce)
                 .educations(educations)
                 .subjects(subjects)
                 .build();

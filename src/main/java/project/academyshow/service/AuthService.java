@@ -2,6 +2,7 @@ package project.academyshow.service;
 
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -32,6 +33,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -49,14 +51,13 @@ public class AuthService {
 
     /** 일반 회원가입 */
     public void userSignUp(UserSignUpRequest userInfo) {
-        memberRegistration(userInfo, RoleType.ROLE_MEMBER);
+        memberRepository.save(userInfo.toEntity(passwordEncoder, RoleType.ROLE_MEMBER));
     }
 
     /** 학원 회원가입 */
     public void academySignUp(UserSignUpRequest userInfo, AcademyInfo academyInfo) {
         /* 회원 기본 정보 */
-        Member savedMember = memberRegistration(userInfo, RoleType.ROLE_ACADEMY);
-
+        Member savedMember = memberRepository.save(userInfo.toEntity(passwordEncoder, RoleType.ROLE_ACADEMY));
         /* 학원 정보 */
         academyRepository.save(academyInfo.toEntity(savedMember));
     }
@@ -64,25 +65,9 @@ public class AuthService {
     /** 과외 회원가입 */
     public void tutorSignUp(UserSignUpRequest userInfo, TutorRequest tutorRequest) {
         /* 회원 기본 정보 */
-        Member savedMember = memberRegistration(userInfo, RoleType.ROLE_TUTOR);
-
+        Member savedMember = memberRepository.save(userInfo.toEntity(passwordEncoder, RoleType.ROLE_TUTOR));
+        /* 과외 정보 */
         tutorInfoRepository.save(tutorRequest.toEntity(savedMember));
-    }
-
-    /** 개인 정보 등록 */
-    private Member memberRegistration(UserSignUpRequest userInfo, RoleType role) {
-        Member newMember = Member.builder()
-                .username(userInfo.getUsername())
-                .password(passwordEncoder.encode(userInfo.getPassword()))
-                .name(userInfo.getName())
-                .phone(userInfo.getPhone())
-                .birth(userInfo.getBirth())
-                .address(userInfo.getAddress())
-                .role(role)
-                .providerType(ProviderType.LOCAL)
-                .build();
-
-        return memberRepository.save(newMember);
     }
 
     /** username 중복 확인 */
@@ -130,7 +115,7 @@ public class AuthService {
 
             return accessToken;
         } catch (Exception exception) {
-            exception.printStackTrace();
+            log.info("로그인 실패 - {}", exception.getLocalizedMessage());
             return null;
         }
     }

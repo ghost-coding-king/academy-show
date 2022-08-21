@@ -64,20 +64,27 @@ public class AuthController {
                                    HttpServletResponse response,
                                    @RequestBody LoginRequest loginRequest) {
         AuthToken accessToken = authService.login(request, response, loginRequest);
-        LoginResponse loginResponse = new LoginResponse();
-        loginResponse.setUsername(loginRequest.getUsername());
-        if (accessToken != null) {
-            loginResponse.setRole(
-                    RoleType.valueOf(
-                            new ArrayList<GrantedAuthority>(accessToken.getAuthentication().getAuthorities())
-                            .get(0).getAuthority()
-                    )
-            );
+        if (accessToken == null)
+            return ResponseEntity.ok(ApiResponse.authenticateFailed());
+        else {
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.AUTHORIZATION, accessToken.getToken())
+                    .body(ApiResponse.success(loginInfo(accessToken)));
         }
-        return accessToken == null ? ResponseEntity.ok(ApiResponse.authenticateFailed()) :
-                ResponseEntity.ok()
-                        .header(HttpHeaders.AUTHORIZATION, accessToken.getToken())
-                        .body(ApiResponse.success(loginResponse));
+    }
+
+    /** Access Token 재발급 */
+    @GetMapping("/refresh")
+    public ResponseEntity<?> refreshToken(HttpServletRequest request,
+                                          HttpServletResponse response) {
+        AuthToken accessToken = authService.refresh(request, response);
+        if (accessToken == null)
+            return ResponseEntity.ok(ApiResponse.authenticateFailed());
+        else {
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.AUTHORIZATION, accessToken.getToken())
+                    .body(ApiResponse.success(loginInfo(accessToken)));
+        }
     }
 
     @Data
@@ -86,14 +93,17 @@ public class AuthController {
         private RoleType role;
     }
 
-    /** Access Token 재발급 */
-    @GetMapping("/refresh")
-    public ResponseEntity<?> refreshToken(HttpServletRequest request,
-                                          HttpServletResponse response) {
-        AuthToken accessToken = authService.refresh(request, response);
-        return accessToken == null ? ResponseEntity.ok(ApiResponse.authenticateFailed()) :
-                ResponseEntity.ok()
-                        .header(HttpHeaders.AUTHORIZATION, accessToken.getToken())
-                        .body(ApiResponse.success(null));
+    /** Access Token 발급 후 username, role 정보 */
+    private LoginResponse loginInfo(AuthToken accessToken) {
+        LoginResponse loginResponse = new LoginResponse();
+        loginResponse.setUsername(accessToken.getTokenClaims().getSubject());
+        loginResponse.setRole(
+                RoleType.valueOf(
+                        new ArrayList<GrantedAuthority>(accessToken.getAuthentication().getAuthorities())
+                                .get(0).getAuthority()
+                )
+        );
+
+        return loginResponse;
     }
 }
