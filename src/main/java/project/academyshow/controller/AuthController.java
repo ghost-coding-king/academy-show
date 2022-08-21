@@ -88,22 +88,22 @@ public class AuthController {
     }
 
     @Data
-    private static class LoginResponse {
+    private static class LoginInfo {
         private String username;
         private RoleType role;
     }
 
     /** Access Token 발급 후 username, role 정보 */
-    private LoginResponse loginInfo(AuthToken accessToken) {
-        LoginResponse loginResponse = new LoginResponse();
-        loginResponse.setUsername(accessToken.getTokenClaims().getSubject());
-        loginResponse.setRole(
+    private LoginInfo loginInfo(AuthToken accessToken) {
+        LoginInfo loginInfo = new LoginInfo();
+        loginInfo.setUsername(accessToken.getTokenClaims().getSubject());
+        loginInfo.setRole(
                 RoleType.valueOf(
                         new ArrayList<GrantedAuthority>(accessToken.getAuthentication().getAuthorities())
                                 .get(0).getAuthority()
                 )
         );
 
-        return loginResponse;
+        return loginInfo;
     }
 }
