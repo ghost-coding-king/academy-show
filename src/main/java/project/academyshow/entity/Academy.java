@@ -24,7 +24,7 @@ public class Academy {
     private String roadAddress;
     private String jibunAddress;
     private String subAddress;
-    private boolean isRoadAddress;
+    private boolean selectRoadAddress;
 
     private String subjects;
 

@@ -36,7 +36,7 @@ public class UserSignUpRequest {
                 .roadAddress(roadAddress)
                 .jibunAddress(jibunAddress)
                 .subAddress(subAddress)
-                .isRoadAddress(isRoadAddress)
+                .selectRoadAddress(isRoadAddress)
                 .role(role)
                 .providerType(ProviderType.LOCAL)
                 .build();

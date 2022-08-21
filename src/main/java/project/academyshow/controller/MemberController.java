@@ -46,8 +46,7 @@ public class MemberController {
             roadAddress = member.getRoadAddress();
             jibunAddress = member.getJibunAddress();
             subAddress = member.getSubAddress();
-            isRoadAddress = member.isRoadAddress();
+            isRoadAddress = member.isSelectRoadAddress();
         }
     }
-
 }

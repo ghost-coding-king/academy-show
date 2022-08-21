@@ -28,7 +28,7 @@ public class Member {
     private String roadAddress;
     private String jibunAddress;
     private String subAddress;
-    private boolean isRoadAddress;
+    private boolean selectRoadAddress;
 
     @Enumerated(EnumType.STRING)
     private RoleType role;

@@ -38,7 +38,7 @@ public class AcademyInfo {
                 .roadAddress(academyRoadAddress)
                 .jibunAddress(academyJibunAddress)
                 .subAddress(academySubAddress)
-                .isRoadAddress(academyIsRoadAddress)
+                .selectRoadAddress(academyIsRoadAddress)
                 .name(academyName)
                 .shuttle(shuttle)
                 .introduce(introduce)

@@ -53,7 +53,7 @@ public class DbInit {
                     .postcode("13524")
                     .roadAddress("경기 성남시 분당구 대왕판교로606번길 45 (판교역 프루지오 시티)")
                     .jibunAddress("경기 성남시 분당구 삼평동 653")
-                    .isRoadAddress(false)
+                    .selectRoadAddress(false)
                     .role(RoleType.ROLE_MEMBER)
                     .providerType(ProviderType.LOCAL)
                     .build();
@@ -67,7 +67,7 @@ public class DbInit {
                     .postcode("13524")
                     .roadAddress("경기 성남시 분당구 대왕판교로606번길 45 (판교역 프루지오 시티)")
                     .jibunAddress("경기 성남시 분당구 삼평동 653")
-                    .isRoadAddress(true)
+                    .selectRoadAddress(true)
                     .role(RoleType.ROLE_ACADEMY)
                     .providerType(ProviderType.LOCAL)
                     .build();
@@ -81,7 +81,7 @@ public class DbInit {
                     .postcode("13524")
                     .roadAddress("경기 성남시 분당구 대왕판교로606번길 45 (판교역 프루지오 시티)")
                     .jibunAddress("경기 성남시 분당구 삼평동 653")
-                    .isRoadAddress(true)
+                    .selectRoadAddress(true)
                     .role(RoleType.ROLE_TUTOR)
                     .providerType(ProviderType.LOCAL)
                     .build();
@@ -97,7 +97,7 @@ public class DbInit {
                     .postcode("13524")
                     .roadAddress("경기 성남시 분당구 대왕판교로606번길 45 (판교역 프루지오 시티)")
                     .jibunAddress("경기 성남시 분당구 삼평동 653")
-                    .isRoadAddress(false)
+                    .selectRoadAddress(false)
                     .name("학원이름")
                     .shuttle(true)
                     .introduce("학원 소개")
