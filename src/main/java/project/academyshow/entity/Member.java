@@ -42,6 +42,7 @@ public class Member {
         this.postcode = myInfo.getPostcode();
         this.roadAddress = myInfo.getRoadAddress();
         this.jibunAddress = myInfo.getJibunAddress();
+        this.subAddress = myInfo.getSubAddress();
         this.selectRoadAddress = myInfo.isSelectRoadAddress();
     }
 }
