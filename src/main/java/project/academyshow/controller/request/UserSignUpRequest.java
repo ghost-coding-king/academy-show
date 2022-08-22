@@ -1,7 +1,6 @@
 package project.academyshow.controller.request;
 
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import project.academyshow.entity.Member;
 import project.academyshow.entity.ProviderType;
@@ -11,7 +10,6 @@ import java.time.LocalDate;
 
 /** 일반회원 회원가입 요청 폼 */
 @Data
-@RequiredArgsConstructor
 public class UserSignUpRequest {
 
     private String username;
