@@ -1,9 +1,15 @@
 package project.academyshow.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Academy {
 
     @Id @GeneratedValue
@@ -14,19 +20,20 @@ public class Academy {
     @Lob
     private String introduce;
 
-    private String address;
+    private String postcode;
+    private String roadAddress;
+    private String jibunAddress;
+    private String subAddress;
+    private boolean selectRoadAddress;
 
-    @OneToMany(mappedBy = "academy")
-    private List<AcademySubject> subjects;
+    private String subjects;
 
-    @OneToMany(mappedBy = "academy")
-    private List<AcademyEducation> educations;
+    private String educations;
 
     private boolean shuttle;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "registration_file_id")
-    private FileInfo businessRegistration;
+    private String businessRegistration;
+    private String profile;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")

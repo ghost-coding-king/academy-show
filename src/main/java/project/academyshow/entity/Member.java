@@ -1,16 +1,15 @@
 package project.academyshow.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.springframework.util.StringUtils;
+import project.academyshow.controller.request.MyInfo;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity
 @Builder
-@Getter
+@Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Member {
@@ -24,7 +23,12 @@ public class Member {
     private String email;
     private String phone;
     private LocalDate birth;
-    private String address;
+    private String postcode;
+    private String roadAddress;
+    private String jibunAddress;
+    private String subAddress;
+    private boolean selectRoadAddress;
+    private String profile;
 
     @Enumerated(EnumType.STRING)
     private RoleType role;
@@ -35,4 +39,16 @@ public class Member {
     @Enumerated(EnumType.STRING)
     private MemberStatus status;
 
+    /** 내 정보 수정 */
+    public void updateMember(MyInfo myInfo) {
+        if (!StringUtils.hasText(myInfo.getProfile())) myInfo.setProfile(null);
+
+        this.phone = myInfo.getPhone();
+        this.postcode = myInfo.getPostcode();
+        this.roadAddress = myInfo.getRoadAddress();
+        this.jibunAddress = myInfo.getJibunAddress();
+        this.subAddress = myInfo.getSubAddress();
+        this.selectRoadAddress = myInfo.isSelectRoadAddress();
+        this.profile = myInfo.getProfile();
+    }
 }

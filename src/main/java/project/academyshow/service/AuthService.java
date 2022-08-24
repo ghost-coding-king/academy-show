@@ -2,6 +2,7 @@ package project.academyshow.service;
 
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -11,12 +12,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
+import project.academyshow.controller.request.AcademyInfo;
 import project.academyshow.controller.request.LoginRequest;
-import project.academyshow.controller.request.SignUpRequest;
-import project.academyshow.entity.Member;
-import project.academyshow.entity.RefreshToken;
+import project.academyshow.controller.request.TutorRequest;
+import project.academyshow.controller.request.UserSignUpRequest;
+import project.academyshow.entity.*;
+import project.academyshow.repository.AcademyRepository;
 import project.academyshow.repository.MemberRepository;
 import project.academyshow.repository.RefreshTokenRepository;
+import project.academyshow.repository.TutorInfoRepository;
 import project.academyshow.security.token.AuthToken;
 import project.academyshow.security.token.AuthTokenProvider;
 import project.academyshow.util.CookieUtil;
@@ -25,12 +29,11 @@ import project.academyshow.util.HeaderUtil;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -41,17 +44,35 @@ public class AuthService {
     private final AuthTokenProvider tokenProvider;
     private final MemberRepository memberRepository;
     private final RefreshTokenRepository refreshTokenRepository;
+    private final AcademyRepository academyRepository;
+    private final TutorInfoRepository tutorInfoRepository;
     private final static long THREE_DAYS_IN_MILLISECONDS = 259200000;
     private final static String REFRESH_TOKEN = "refresh_token";
 
-    /** 회원가입 */
-    public void signUp(SignUpRequest signUpRequest) {
-        Member newMember = Member.builder()
-                .username(signUpRequest.getUsername())
-                .password(passwordEncoder.encode(signUpRequest.getPassword()))
-                .build();
+    /** 일반 회원가입 */
+    public void userSignUp(UserSignUpRequest userInfo) {
+        memberRepository.save(userInfo.toEntity(passwordEncoder, RoleType.ROLE_MEMBER));
+    }
 
-        memberRepository.save(newMember);
+    /** 학원 회원가입 */
+    public void academySignUp(UserSignUpRequest userInfo, AcademyInfo academyInfo) {
+        /* 회원 기본 정보 */
+        Member savedMember = memberRepository.save(userInfo.toEntity(passwordEncoder, RoleType.ROLE_ACADEMY));
+        /* 학원 정보 */
+        academyRepository.save(academyInfo.toEntity(savedMember));
+    }
+
+    /** 과외 회원가입 */
+    public void tutorSignUp(UserSignUpRequest userInfo, TutorRequest tutorRequest) {
+        /* 회원 기본 정보 */
+        Member savedMember = memberRepository.save(userInfo.toEntity(passwordEncoder, RoleType.ROLE_TUTOR));
+        /* 과외 정보 */
+        tutorInfoRepository.save(tutorRequest.toEntity(savedMember));
+    }
+
+    /** username 중복 확인 */
+    public boolean usernameCheck(String username) {
+        return memberRepository.findByUsername(username).isPresent();
     }
 
     /** 로그인
@@ -94,7 +115,7 @@ public class AuthService {
 
             return accessToken;
         } catch (Exception exception) {
-            exception.printStackTrace();
+            log.info("로그인 실패 - {}", exception.getLocalizedMessage());
             return null;
         }
     }
@@ -119,7 +140,6 @@ public class AuthService {
         /* DB 에 등록된 정보를 통해 검증 */
         Optional<RefreshToken> oldRefreshToken = refreshTokenRepository
                 .findByUsernameAndToken(username, refreshTokenString);
-
         if (oldRefreshToken.isEmpty()) return null;
 
         /* 유효한 Refresh Token 인지 확인 */
@@ -140,12 +160,12 @@ public class AuthService {
         }
 
         /* Access Token 발급 */
-        List<SimpleGrantedAuthority> authorities =
-                Arrays.stream(claims.get(AuthTokenProvider.AUTHORITIES_KEY).toString().split(","))
-                        .map(SimpleGrantedAuthority::new)
-                        .collect(Collectors.toList());
+        Optional<Member> nowMember = memberRepository.findByUsername(username);
+        if (nowMember.isEmpty()) return null;
 
-        User principal = new User(claims.getSubject(), "", authorities);
+        List<SimpleGrantedAuthority> authorities =
+                List.of(new SimpleGrantedAuthority(nowMember.get().getRole().toString()));
+        User principal = new User(username, "", authorities);
         Authentication authentication = new UsernamePasswordAuthenticationToken(principal, "", authorities);
 
         return tokenProvider.generateToken(authentication);
