@@ -27,6 +27,7 @@ public class Member {
     private String jibunAddress;
     private String subAddress;
     private boolean selectRoadAddress;
+    private String profile;
 
     @Enumerated(EnumType.STRING)
     private RoleType role;
@@ -37,6 +38,7 @@ public class Member {
     @Enumerated(EnumType.STRING)
     private MemberStatus status;
 
+    /** 내 정보 수정 */
     public void updateMember(MyInfo myInfo) {
         this.phone = myInfo.getPhone();
         this.postcode = myInfo.getPostcode();

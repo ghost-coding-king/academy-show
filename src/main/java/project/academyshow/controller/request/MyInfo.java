@@ -12,6 +12,7 @@ public class MyInfo {
 
     private String username;
     private String name;
+    private String profile;
     private LocalDate birth;
     private String phone;
     private String postcode;
@@ -30,6 +31,7 @@ public class MyInfo {
         jibunAddress = member.getJibunAddress();
         subAddress = member.getSubAddress();
         selectRoadAddress = member.isSelectRoadAddress();
+        profile = member.getProfile();
     }
 
 }

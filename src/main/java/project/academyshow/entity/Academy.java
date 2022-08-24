@@ -33,6 +33,7 @@ public class Academy {
     private boolean shuttle;
 
     private String businessRegistration;
+    private String profile;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")

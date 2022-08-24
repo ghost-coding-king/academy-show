@@ -22,6 +22,7 @@ public class UserSignUpRequest {
     private String jibunAddress;
     private String subAddress;
     private boolean selectRoadAddress;
+    private String profile;
 
     public Member toEntity(PasswordEncoder passwordEncoder, RoleType role) {
         return Member.builder()
@@ -35,6 +36,7 @@ public class UserSignUpRequest {
                 .jibunAddress(jibunAddress)
                 .subAddress(subAddress)
                 .selectRoadAddress(selectRoadAddress)
+                .profile(profile)
                 .role(role)
                 .providerType(ProviderType.LOCAL)
                 .build();

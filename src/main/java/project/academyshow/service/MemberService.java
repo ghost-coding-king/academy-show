@@ -23,6 +23,7 @@ public class MemberService {
         return member.get();
     }
 
+    /** 마이페이지 - 내 정보 수정 */
     public void updateMember(String username, MyInfo myInfo) {
         Optional<Member> optionalMember = memberRepository.findByUsername(username);
         optionalMember.orElseThrow(() -> new UsernameNotFoundException("Username not found."));

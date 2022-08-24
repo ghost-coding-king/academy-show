@@ -23,6 +23,7 @@ public class AcademyInfo {
     private boolean academySelectRoadAddress;
     private String introduce;
     private String registrationFile;
+    private String profile;
 
     public Academy toEntity(Member savedMember) {
         String educations = String.join(",", this.educations);
@@ -44,6 +45,7 @@ public class AcademyInfo {
                 .introduce(introduce)
                 .educations(educations)
                 .subjects(subjects)
+                .profile(profile)
                 .build();
     }
 }
