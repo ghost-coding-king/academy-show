@@ -2,6 +2,7 @@ package project.academyshow.controller.request;
 
 import lombok.Data;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.util.StringUtils;
 import project.academyshow.entity.Member;
 import project.academyshow.entity.ProviderType;
 import project.academyshow.entity.RoleType;
@@ -25,6 +26,8 @@ public class UserSignUpRequest {
     private String profile;
 
     public Member toEntity(PasswordEncoder passwordEncoder, RoleType role) {
+        if (!StringUtils.hasText(profile)) profile = null;
+
         return Member.builder()
                 .username(this.getUsername())
                 .password(passwordEncoder.encode(password))

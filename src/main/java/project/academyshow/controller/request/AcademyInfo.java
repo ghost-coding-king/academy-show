@@ -1,6 +1,7 @@
 package project.academyshow.controller.request;
 
 import lombok.Data;
+import org.springframework.util.StringUtils;
 import project.academyshow.entity.Academy;
 import project.academyshow.entity.Member;
 import project.academyshow.entity.Subject;
@@ -26,6 +27,8 @@ public class AcademyInfo {
     private String profile;
 
     public Academy toEntity(Member savedMember) {
+        if (!StringUtils.hasText(profile)) profile = null;
+
         String educations = String.join(",", this.educations);
 
         String subjects = this.getSubjects().stream()

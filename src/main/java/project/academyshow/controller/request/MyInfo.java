@@ -2,6 +2,7 @@ package project.academyshow.controller.request;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.util.StringUtils;
 import project.academyshow.entity.Member;
 
 import java.time.LocalDate;
@@ -22,6 +23,8 @@ public class MyInfo {
     private boolean selectRoadAddress;
 
     public MyInfo(Member member) {
+        if (!StringUtils.hasText(profile)) profile = null;
+
         username = member.getUsername();
         name = member.getName();
         birth = member.getBirth();
