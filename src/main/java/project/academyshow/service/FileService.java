@@ -47,7 +47,7 @@ public class FileService {
 
         log.debug("upload. saved id = {}, path = {}", fileInfo.getId(), newFile.getPath());
 
-        return "http://localhost:8081/files/" + fileInfo.getId();
+        return "http://localhost:8081/api/files/" + fileInfo.getId();
     }
 
     public File getFile(Long id) {
