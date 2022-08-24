@@ -5,19 +5,23 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 import project.academyshow.controller.request.AcademySignUpRequest;
 import project.academyshow.controller.request.LoginRequest;
 import project.academyshow.controller.request.TutorSignUpRequest;
 import project.academyshow.controller.request.UserSignUpRequest;
 import project.academyshow.controller.response.ApiResponse;
+import project.academyshow.entity.Member;
 import project.academyshow.entity.RoleType;
+import project.academyshow.repository.MemberRepository;
 import project.academyshow.security.token.AuthToken;
 import project.academyshow.security.token.AuthTokenProvider;
 import project.academyshow.service.AuthService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,6 +29,7 @@ import javax.servlet.http.HttpServletResponse;
 public class AuthController {
 
     private final AuthService authService;
+    private final MemberRepository memberRepository;
 
     /** 일반 회원가입 */
     @PostMapping("/sign-up/user")
@@ -90,6 +95,7 @@ public class AuthController {
     @Data
     private static class LoginInfo {
         private String username;
+        private String profile;
         private RoleType role;
     }
 
@@ -97,7 +103,12 @@ public class AuthController {
     private LoginInfo loginInfo(AuthToken accessToken) {
         LoginInfo loginInfo = new LoginInfo();
         Claims claims = accessToken.getTokenClaims();
-        loginInfo.setUsername(claims.getSubject());
+        String username = claims.getSubject();
+        Optional<Member> member = memberRepository.findByUsername(username);
+        member.orElseThrow(() -> new UsernameNotFoundException("Username not found."));
+
+        loginInfo.setUsername(username);
+        loginInfo.setProfile(member.get().getProfile());
         loginInfo.setRole(RoleType.valueOf(claims.get(AuthTokenProvider.AUTHORITIES_KEY).toString()));
 
         return loginInfo;

@@ -79,9 +79,9 @@ public class AuthService {
      * @return AuthToken */
     public AuthToken login(HttpServletRequest request,
                            HttpServletResponse response,
-                           LoginRequest loginInfo) {
-        String username = loginInfo.getUsername();
-        String password = loginInfo.getPassword();
+                           LoginRequest loginRequest) {
+        String username = loginRequest.getUsername();
+        String password = loginRequest.getPassword();
 
         try {
             /* username, password 검증 */
