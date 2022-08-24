@@ -38,7 +38,7 @@ cors:
   allowed-origins: 'http://localhost:8080'
   allowed-methods: '*'
   allowed-headers: '*'
-  exposed-headers: '*'
+  exposed-headers: 'Authorization'
   max-age: 3600
 
 # app property
