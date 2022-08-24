@@ -1,6 +1,7 @@
 package project.academyshow.entity;
 
 import lombok.*;
+import org.springframework.util.StringUtils;
 import project.academyshow.controller.request.MyInfo;
 
 import javax.persistence.*;
@@ -40,11 +41,14 @@ public class Member {
 
     /** 내 정보 수정 */
     public void updateMember(MyInfo myInfo) {
+        if (!StringUtils.hasText(myInfo.getProfile())) myInfo.setProfile(null);
+
         this.phone = myInfo.getPhone();
         this.postcode = myInfo.getPostcode();
         this.roadAddress = myInfo.getRoadAddress();
         this.jibunAddress = myInfo.getJibunAddress();
         this.subAddress = myInfo.getSubAddress();
         this.selectRoadAddress = myInfo.isSelectRoadAddress();
+        this.profile = myInfo.getProfile();
     }
 }
