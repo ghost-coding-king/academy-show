@@ -47,7 +47,7 @@ public class DbInit {
         }
 
         public void insertFile() {
-            for (int i=10000; i<10007; i++) {
+            for (int i=10000; i<10009; i++) {
                 em.createNativeQuery("insert into file_info(id, ext, path, size) values(" + i + ", '.png', '', 0)")
                         .executeUpdate();
             }
