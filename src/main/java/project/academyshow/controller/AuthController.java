@@ -94,7 +94,7 @@ public class AuthController {
 
     @Data
     private static class LoginInfo {
-        private String username;
+        private String name;
         private String profile;
         private RoleType role;
     }
@@ -107,7 +107,7 @@ public class AuthController {
         Optional<Member> member = memberRepository.findByUsername(username);
         member.orElseThrow(() -> new UsernameNotFoundException("Username not found."));
 
-        loginInfo.setUsername(username);
+        loginInfo.setName(member.get().getName());
         loginInfo.setProfile(member.get().getProfile());
         loginInfo.setRole(RoleType.valueOf(claims.get(AuthTokenProvider.AUTHORITIES_KEY).toString()));
 
