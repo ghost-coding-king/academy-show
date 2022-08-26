@@ -1,13 +1,13 @@
 package project.academyshow.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.academyshow.controller.request.SearchRequest;
 import project.academyshow.entity.Academy;
 import project.academyshow.repository.AcademyRepository;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -16,7 +16,7 @@ public class AcademyService {
 
     private final AcademyRepository academyRepository;
 
-    public List<Academy> search(SearchRequest searchRequest) {
-        return academyRepository.findAll();
+    public Page<Academy> search(SearchRequest searchRequest, Pageable pageable) {
+        return academyRepository.findAll(searchRequest, pageable);
     }
 }

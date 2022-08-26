@@ -14,6 +14,11 @@ public class SearchRequest {
     private String area;
     private String order;
 
-    private int offset;
-    private int limit;
+    public String getEducationRegexp() {
+        return String.join("|", educations);
+    }
+
+    public String getSubjectRegexp() {
+        return String.join("|", subjects);
+    }
 }
