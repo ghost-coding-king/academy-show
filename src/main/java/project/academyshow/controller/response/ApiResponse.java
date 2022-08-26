@@ -27,4 +27,7 @@ public class ApiResponse<T> {
         return new ApiResponse<>(401, "자격증명에 실패하였습니다.", null);
     }
 
+    public static <T> ApiResponse<T> resourceNotFound() {
+        return new ApiResponse<>(404, "리소스를 찾을 수 없습니다.", null);
+    }
 }
