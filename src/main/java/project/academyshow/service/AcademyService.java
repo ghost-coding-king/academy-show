@@ -9,6 +9,8 @@ import project.academyshow.controller.request.SearchRequest;
 import project.academyshow.entity.Academy;
 import project.academyshow.repository.AcademyRepository;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -18,5 +20,9 @@ public class AcademyService {
 
     public Page<Academy> search(SearchRequest searchRequest, Pageable pageable) {
         return academyRepository.findAll(searchRequest, pageable);
+    }
+
+    public Optional<Academy> findById(Long id) {
+        return academyRepository.findById(id);
     }
 }
