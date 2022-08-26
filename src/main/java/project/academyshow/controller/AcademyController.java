@@ -31,6 +31,7 @@ public class AcademyController {
     private static class AcademySearchResponse {
         private Long id;
         private String name;
+        private String profile;
         private String introduce;
         private String roadAddress;
         private String subAddress;
@@ -38,6 +39,7 @@ public class AcademyController {
         private AcademySearchResponse(Academy academy) {
             this.id = academy.getId();
             this.name = academy.getName();
+            this.profile = academy.getProfile();
             this.introduce = academy.getIntroduce();
             this.roadAddress = academy.getRoadAddress();
             this.subAddress = academy.getSubAddress();
