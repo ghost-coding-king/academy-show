@@ -65,10 +65,10 @@ public class SecurityConfig {
                     .authorizeRequests()
                     .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                     .antMatchers("/auth/**").permitAll()
-                    .antMatchers("/api/files/**").permitAll()
                     .antMatchers("/api/subjects").permitAll()
                     .antMatchers("/api/academies").permitAll()
-                    .antMatchers("/api/academy").permitAll()
+                    .antMatchers("/api/files/**").permitAll()
+                    .antMatchers("/api/academy/**").permitAll()
                     .anyRequest().authenticated();
 
         /* jwtTokenFilter 등록 */
