@@ -68,6 +68,7 @@ public class SecurityConfig {
                     .antMatchers("/api/files/**").permitAll()
                     .antMatchers("/api/subjects").permitAll()
                     .antMatchers("/api/academies").permitAll()
+                    .antMatchers("/api/academy").permitAll()
                     .anyRequest().authenticated();
 
         /* jwtTokenFilter 등록 */
