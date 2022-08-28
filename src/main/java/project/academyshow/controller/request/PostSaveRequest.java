@@ -6,6 +6,8 @@ import project.academyshow.entity.Member;
 import project.academyshow.entity.Post;
 import project.academyshow.entity.PostCategory;
 
+import java.time.LocalDateTime;
+
 @Data
 public class PostSaveRequest {
 
@@ -19,6 +21,7 @@ public class PostSaveRequest {
                 .category(category)
                 .title(title)
                 .content(content)
+                .createdAt(LocalDateTime.now())
                 .member(member)
                 .academy(academy)
                 .build();
