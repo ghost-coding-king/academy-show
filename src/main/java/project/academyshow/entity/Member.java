@@ -39,6 +39,9 @@ public class Member {
     @Enumerated(EnumType.STRING)
     private MemberStatus status;
 
+    @OneToOne(mappedBy = "member")
+    private Academy academy;
+
     /** 내 정보 수정 */
     public void updateMember(MyInfo myInfo) {
         if (!StringUtils.hasText(myInfo.getProfile())) myInfo.setProfile(null);
