@@ -22,6 +22,7 @@ public class Post {
     @JoinColumn(name = "member_id")
     private Member member;
 
+    @Enumerated(EnumType.STRING)
     private PostCategory category;
 
     private String title;
