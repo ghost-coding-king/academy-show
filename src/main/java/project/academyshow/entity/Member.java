@@ -39,7 +39,7 @@ public class Member {
     @Enumerated(EnumType.STRING)
     private MemberStatus status;
 
-    @OneToOne(mappedBy = "member")
+    @OneToOne(mappedBy = "member", fetch = FetchType.LAZY)
     private Academy academy;
 
     /** 내 정보 수정 */

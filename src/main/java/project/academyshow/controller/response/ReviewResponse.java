@@ -12,6 +12,7 @@ public class ReviewResponse extends AbstractAcademyshowResponse{
     private final String profile;
     private final String comment;
     private final Integer rating;
+    private final String reviewAge;
 
     private ReviewResponse(Review review) {
         super(review);
@@ -22,6 +23,7 @@ public class ReviewResponse extends AbstractAcademyshowResponse{
         profile = review.getMember().getProfile();
         comment = review.getComment();
         rating = review.getRating();
+        reviewAge = review.getReviewAge();
     }
 
     public static ReviewResponse of(Review review) {

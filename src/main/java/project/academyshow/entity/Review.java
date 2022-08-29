@@ -33,6 +33,8 @@ public class Review extends AbstractTimestampEntity {
     @Column
     private String comment;
 
+    private String reviewAge;
+
     @Column
     private Integer rating;
 

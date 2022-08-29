@@ -11,6 +11,7 @@ import project.academyshow.entity.Review;
 public class ReviewRequest {
     private String comment;
     private Integer rating;
+    private String reviewAge;
 
     public Review toEntity(Review.TYPE type, Member member, Long reviewedId) {
         return Review.builder()
@@ -18,6 +19,7 @@ public class ReviewRequest {
                 .reviewedId(reviewedId)
                 .comment(comment)
                 .rating(rating)
+                .reviewAge(reviewAge)
                 .member(member)
                 .build();
     }
