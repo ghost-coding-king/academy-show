@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -68,7 +69,7 @@ public class SecurityConfig {
                     .antMatchers("/api/subjects").permitAll()
                     .antMatchers("/api/academies").permitAll()
                     .antMatchers("/api/files/**").permitAll()
-                    .antMatchers("/api/academy/**").permitAll()
+                    .antMatchers(HttpMethod.GET, "/api/academy/**").permitAll()
                     .anyRequest().authenticated();
 
         /* jwtTokenFilter 등록 */
