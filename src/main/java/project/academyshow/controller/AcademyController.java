@@ -76,19 +76,4 @@ public class AcademyController {
     public ApiResponse<?> reviewStatistics(@PathVariable("id") Long id) {
         return ApiResponse.success(academyService.reviewStatistics(id));
     }
-
-    @GetMapping("/academy/{id}/posts")
-    public ApiResponse<?> academyPosts(@PathVariable("id") Long id, Pageable pageable) {
-        return ApiResponse.success(academyService.findPostList(id, pageable));
-    }
-
-    @GetMapping("/academy/{academyId}/posts/{postId}")
-    public ApiResponse<?> academyPost(@PathVariable("academyId") Long academyId,
-                                      @PathVariable("postId") Long postId) {
-        Optional<Post> post = academyService.findPost(academyId, postId);
-        if (post.isEmpty())
-            return ApiResponse.resourceNotFound();
-        else
-            return ApiResponse.success(null);
-    }
 }

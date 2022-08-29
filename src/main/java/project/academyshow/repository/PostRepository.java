@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import project.academyshow.controller.request.PostRequest;
 import project.academyshow.entity.Post;
-import project.academyshow.entity.Review;
 
 import java.util.Optional;
 
@@ -22,7 +21,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
                          "from Post p " +
                          "where p.category = #{postRequest.category}"
     )
-    Page<Review> findAll(PostRequest postRequest, Pageable pageable);
+    Page<Post> findAll(PostRequest postRequest, Pageable pageable);
 
     @Query("select p " +
             "from Post p " +

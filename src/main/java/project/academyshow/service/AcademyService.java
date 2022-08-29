@@ -8,7 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 import project.academyshow.controller.request.SearchRequest;
 import project.academyshow.controller.response.ReviewStatistics;
 import project.academyshow.entity.Academy;
-import project.academyshow.entity.Post;
 import project.academyshow.entity.Review;
 import project.academyshow.repository.AcademyRepository;
 import project.academyshow.repository.PostRepository;
@@ -25,7 +24,6 @@ public class AcademyService {
 
     private final AcademyRepository academyRepository;
     private final ReviewRepository reviewRepository;
-    private final PostRepository postRepository;
 
     public Page<Academy> search(SearchRequest searchRequest, Pageable pageable) {
         return academyRepository.findAll(searchRequest, pageable);
@@ -38,13 +36,5 @@ public class AcademyService {
     public ReviewStatistics reviewStatistics(Long id) {
         List<Tuple> tuples = reviewRepository.countGroupByRatingForType(Review.TYPE.ACADEMY, id);
         return new ReviewStatistics(tuples);
-    }
-
-    public Page<Post> findPostList(Long id, Pageable pageable) {
-        return postRepository.findAllByAcademy(id, pageable);
-    }
-
-    public Optional<Post> findPost(Long academyId, Long postId) {
-        return postRepository.findByAcademyAndPostId(academyId, postId);
     }
 }
