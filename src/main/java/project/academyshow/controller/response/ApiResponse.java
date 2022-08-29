@@ -11,6 +11,9 @@ public class ApiResponse<T> {
     private String msg;
     private T data;
 
+    public static final ApiResponse DELETE_SUCCESS_RESPONSE =
+            new ApiResponse(200, "삭제에 성공했습니다", null);
+
     public ApiResponse(int code, String msg, T data) {
         if (data != null)
             this.count = data instanceof List ? ((List<?>) data).size() : 1;
