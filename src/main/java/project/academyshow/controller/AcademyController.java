@@ -4,14 +4,14 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import project.academyshow.controller.request.ReviewRequest;
 import project.academyshow.controller.request.SearchRequest;
 import project.academyshow.controller.response.ApiResponse;
 import project.academyshow.entity.Academy;
+import project.academyshow.entity.Review;
 import project.academyshow.service.AcademyService;
+import project.academyshow.service.ReviewService;
 
 import java.util.Arrays;
 import java.util.List;
@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 public class AcademyController {
 
     private final AcademyService academyService;
+    private final ReviewService reviewService;
 
     /** 학원 검색 (Pageable: page(페이지), size(페이지 당 개수), sort(정렬 기준 필드명과 정렬방법) */
     @GetMapping("/academies")
@@ -86,5 +87,15 @@ public class AcademyController {
             educations = Arrays.stream(academy.getEducations().split(",")).collect(Collectors.toList());
             shuttle = academy.isShuttle();
         }
+    }
+
+    @GetMapping("/academy/{id}/reviews")
+    public ApiResponse<?> findAllReview(@PathVariable("id") Long id, Pageable pageable) {
+        return ApiResponse.success(reviewService.findAll(pageable, Review.TYPE.ACADEMY, id));
+    }
+
+    @PostMapping("/academy/{id}/reviews")
+    public ApiResponse<?> createReview(@PathVariable("id") Long id, @RequestBody ReviewRequest request) {
+        return ApiResponse.success(reviewService.create(request, Review.TYPE.ACADEMY, id));
     }
 }
