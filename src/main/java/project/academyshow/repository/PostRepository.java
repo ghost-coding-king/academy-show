@@ -8,6 +8,8 @@ import project.academyshow.controller.request.PostRequest;
 import project.academyshow.entity.Post;
 import project.academyshow.entity.Review;
 
+import java.util.Optional;
+
 public interface PostRepository extends JpaRepository<Post, Long> {
     @Query(
             value = "select p " +
@@ -21,4 +23,15 @@ public interface PostRepository extends JpaRepository<Post, Long> {
                          "where p.category = #{postRequest.category}"
     )
     Page<Review> findAll(PostRequest postRequest, Pageable pageable);
+
+    @Query("select p " +
+            "from Post p " +
+            "where p.academy.id = :id")
+    Page<Post> findAllByAcademy(Long id, Pageable pageable);
+
+    @Query("select p " +
+            "from Post p " +
+            "where p.academy.id = :academyId " +
+            "and p.id = :postId ")
+    Optional<Post> findByAcademyAndPostId(Long academyId, Long postId);
 }

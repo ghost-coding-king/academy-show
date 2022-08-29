@@ -10,6 +10,7 @@ import project.academyshow.controller.request.SearchRequest;
 import project.academyshow.controller.response.AcademyResponse;
 import project.academyshow.controller.response.ApiResponse;
 import project.academyshow.entity.Academy;
+import project.academyshow.entity.Post;
 import project.academyshow.entity.Review;
 import project.academyshow.service.AcademyService;
 import project.academyshow.service.ReviewService;
@@ -78,14 +79,16 @@ public class AcademyController {
 
     @GetMapping("/academy/{id}/posts")
     public ApiResponse<?> academyPosts(@PathVariable("id") Long id, Pageable pageable) {
-        academyService.findPostList(id, pageable);
-        return ApiResponse.success(null);
+        return ApiResponse.success(academyService.findPostList(id, pageable));
     }
 
     @GetMapping("/academy/{academyId}/posts/{postId}")
     public ApiResponse<?> academyPost(@PathVariable("academyId") Long academyId,
                                       @PathVariable("postId") Long postId) {
-        academyService.findPost(academyId, postId);
-        return ApiResponse.success(null);
+        Optional<Post> post = academyService.findPost(academyId, postId);
+        if (post.isEmpty())
+            return ApiResponse.resourceNotFound();
+        else
+            return ApiResponse.success(null);
     }
 }
