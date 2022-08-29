@@ -22,10 +22,10 @@ public class PostService {
     private final PostRepository postRepository;
     private final AcademyRepository academyRepository;
 
-    public void save(PostRequest postRequest, Member member) {
+    public Post save(PostRequest postRequest, Member member) {
         Optional<Academy> academy = academyRepository.findById(postRequest.getAcademyId());
         academy.orElseThrow(() -> new IllegalArgumentException("없는 academy_id 입니다."));
-        postRepository.save(postRequest.toEntity(member, academy.get()));
+        return postRepository.save(postRequest.toEntity(member, academy.get()));
     }
 
     public Page<Post> findAllByAcademy(Long id, Pageable pageable) {

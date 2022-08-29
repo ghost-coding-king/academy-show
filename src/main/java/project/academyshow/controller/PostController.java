@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import project.academyshow.controller.request.PostRequest;
 import project.academyshow.controller.response.ApiResponse;
 import project.academyshow.controller.response.PostResponse;
+import project.academyshow.entity.Post;
 import project.academyshow.security.entity.CustomUserDetails;
 import project.academyshow.service.PostService;
 
@@ -19,8 +20,8 @@ public class PostController {
     @PostMapping("/posts")
     public ApiResponse<?> create(@AuthenticationPrincipal CustomUserDetails user,
                                 @RequestBody PostRequest postRequest) {
-        postService.save(postRequest, user.getMember());
-        return ApiResponse.success(null);
+        Post newsPost = postService.save(postRequest, user.getMember());
+        return ApiResponse.success(newsPost.getId());
     }
 
     @GetMapping("/posts/{id}")
