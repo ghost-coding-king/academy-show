@@ -98,4 +98,10 @@ public class AcademyController {
     public ApiResponse<?> createReview(@PathVariable("id") Long id, @RequestBody ReviewRequest request) {
         return ApiResponse.success(reviewService.create(request, Review.TYPE.ACADEMY, id));
     }
+
+    /** 학원 리뷰 별점 통계 */
+    @GetMapping("/academy/{id}/reviews/statistics")
+    public ApiResponse<?> reviewStatistics(@PathVariable("id") Long id) {
+        return ApiResponse.success(academyService.reviewStatistics(id));
+    }
 }

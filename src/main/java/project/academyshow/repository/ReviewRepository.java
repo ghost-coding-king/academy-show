@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import project.academyshow.entity.Review;
 
+import javax.persistence.Tuple;
+import java.util.List;
 import java.util.Optional;
 
 public interface ReviewRepository extends JpaRepository<Review, Long> {
@@ -26,4 +28,11 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     @Override
     @Query("select r from Review r inner join fetch r.member where r.id = :id")
     Optional<Review> findById(Long id);
+
+    @Query("select count(r), r.rating " +
+            "from Review r " +
+            "where r.type = :type " +
+            "and r.reviewedId = :id " +
+            "group by r.rating ")
+    List<Tuple> countGroupByRatingForType(Review.TYPE type, Long id);
 }
