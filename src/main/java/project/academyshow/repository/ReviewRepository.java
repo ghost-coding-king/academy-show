@@ -14,7 +14,8 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
                 "from Review r " +
                 "inner join fetch r.member " +
                 "where r.type = :type " +
-                "and r.reviewedId = :reviewedId ",
+                "and r.reviewedId = :reviewedId " +
+                "order by r.createdAt desc ",
         countQuery = "select count(r) " +
                      "from Review r " +
                      "where r.type = :type " +

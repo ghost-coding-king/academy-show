@@ -5,14 +5,13 @@ import project.academyshow.entity.Review;
 
 @Getter
 public class ReviewResponse extends AbstractAcademyshowResponse{
-    private Long id;
-    private Long reviewedId;
-    private Review.TYPE type;
-
-    private String name;
-
-    private String comment;
-    private Integer rating;
+    private final Long id;
+    private final Long reviewedId;
+    private final Review.TYPE type;
+    private final String name;
+    private final String profile;
+    private final String comment;
+    private final Integer rating;
 
     private ReviewResponse(Review review) {
         super(review);
@@ -20,6 +19,7 @@ public class ReviewResponse extends AbstractAcademyshowResponse{
         reviewedId = review.getReviewedId();
         type = review.getType();
         name = review.getMember().getName();
+        profile = review.getMember().getProfile();
         comment = review.getComment();
         rating = review.getRating();
     }
