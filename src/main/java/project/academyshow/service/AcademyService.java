@@ -10,6 +10,7 @@ import project.academyshow.controller.response.ReviewStatistics;
 import project.academyshow.entity.Academy;
 import project.academyshow.entity.Review;
 import project.academyshow.repository.AcademyRepository;
+import project.academyshow.repository.PostRepository;
 import project.academyshow.repository.ReviewRepository;
 
 import javax.persistence.Tuple;
@@ -23,6 +24,7 @@ public class AcademyService {
 
     private final AcademyRepository academyRepository;
     private final ReviewRepository reviewRepository;
+    private final PostRepository postRepository;
 
     public Page<Academy> search(SearchRequest searchRequest, Pageable pageable) {
         return academyRepository.findAll(searchRequest, pageable);
@@ -35,5 +37,13 @@ public class AcademyService {
     public ReviewStatistics reviewStatistics(Long id) {
         List<Tuple> tuples = reviewRepository.countGroupByRatingForType(Review.TYPE.ACADEMY, id);
         return new ReviewStatistics(tuples);
+    }
+
+    public void findPostList(Long id, Pageable pageable) {
+
+    }
+
+    public void findPost(Long academyId, Long postId) {
+
     }
 }

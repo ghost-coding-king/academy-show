@@ -7,16 +7,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 import project.academyshow.controller.request.ReviewRequest;
 import project.academyshow.controller.request.SearchRequest;
+import project.academyshow.controller.response.AcademyResponse;
 import project.academyshow.controller.response.ApiResponse;
 import project.academyshow.entity.Academy;
 import project.academyshow.entity.Review;
 import project.academyshow.service.AcademyService;
 import project.academyshow.service.ReviewService;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -62,33 +60,6 @@ public class AcademyController {
             return ApiResponse.resourceNotFound();
     }
 
-    @Data
-    private static class AcademyResponse {
-        private Long id;
-        private String name;
-        private String profile;
-        private String introduce;
-        private String roadAddress;
-        private String jibunAddress;
-        private String subAddress;
-        private List<String> subjects;
-        private List<String> educations;
-        private boolean shuttle;
-
-        private AcademyResponse(Academy academy) {
-            id = academy.getId();
-            name = academy.getName();
-            profile = academy.getProfile();
-            introduce = academy.getIntroduce();
-            roadAddress = academy.getRoadAddress();
-            jibunAddress = academy.getJibunAddress();
-            subAddress = academy.getSubAddress();
-            subjects = Arrays.stream(academy.getSubjects().split(",")).collect(Collectors.toList());
-            educations = Arrays.stream(academy.getEducations().split(",")).collect(Collectors.toList());
-            shuttle = academy.isShuttle();
-        }
-    }
-
     @GetMapping("/academy/{id}/reviews")
     public ApiResponse<?> findAllReview(@PathVariable("id") Long id, Pageable pageable) {
         return ApiResponse.success(reviewService.findAll(pageable, Review.TYPE.ACADEMY, id));
@@ -103,5 +74,18 @@ public class AcademyController {
     @GetMapping("/academy/{id}/reviews/statistics")
     public ApiResponse<?> reviewStatistics(@PathVariable("id") Long id) {
         return ApiResponse.success(academyService.reviewStatistics(id));
+    }
+
+    @GetMapping("/academy/{id}/posts")
+    public ApiResponse<?> academyPosts(@PathVariable("id") Long id, Pageable pageable) {
+        academyService.findPostList(id, pageable);
+        return ApiResponse.success(null);
+    }
+
+    @GetMapping("/academy/{academyId}/posts/{postId}")
+    public ApiResponse<?> academyPost(@PathVariable("academyId") Long academyId,
+                                      @PathVariable("postId") Long postId) {
+        academyService.findPost(academyId, postId);
+        return ApiResponse.success(null);
     }
 }
