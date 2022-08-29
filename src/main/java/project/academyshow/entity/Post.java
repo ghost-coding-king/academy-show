@@ -6,14 +6,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Post {
+public class Post extends AbstractTimestampEntity {
 
     @Id @GeneratedValue
     private Long id;
@@ -34,5 +33,19 @@ public class Post {
     @JoinColumn(name = "academy_id")
     private Academy academy;
 
-    private LocalDateTime createdAt;
+    public String profileOfAcademy() {
+        return academy.getProfile();
+    }
+
+    public String profileOfMember() {
+        return member.getProfile();
+    }
+
+    public String nameOfAcademy() {
+        return academy.getName();
+    }
+
+    public String nameOfMember() {
+        return member.getName();
+    }
 }

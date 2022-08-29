@@ -9,10 +9,12 @@ import project.academyshow.controller.request.ReviewRequest;
 import project.academyshow.controller.request.SearchRequest;
 import project.academyshow.controller.response.AcademyResponse;
 import project.academyshow.controller.response.ApiResponse;
+import project.academyshow.controller.response.PostResponse;
 import project.academyshow.entity.Academy;
 import project.academyshow.entity.Post;
 import project.academyshow.entity.Review;
 import project.academyshow.service.AcademyService;
+import project.academyshow.service.PostService;
 import project.academyshow.service.ReviewService;
 
 import java.util.Optional;
@@ -24,6 +26,7 @@ public class AcademyController {
 
     private final AcademyService academyService;
     private final ReviewService reviewService;
+    private final PostService postService;
 
     /** 학원 검색 (Pageable: page(페이지), size(페이지 당 개수), sort(정렬 기준 필드명과 정렬방법) */
     @GetMapping("/academies")
@@ -75,5 +78,10 @@ public class AcademyController {
     @GetMapping("/academy/{id}/reviews/statistics")
     public ApiResponse<?> reviewStatistics(@PathVariable("id") Long id) {
         return ApiResponse.success(academyService.reviewStatistics(id));
+    }
+
+    @GetMapping("/academy/{id}/posts")
+    public ApiResponse<?> findAllPosts(@PathVariable("id") Long id, Pageable pageable) {
+        return ApiResponse.success(postService.findAllByAcademy(id, pageable).map(PostResponse::ofList));
     }
 }

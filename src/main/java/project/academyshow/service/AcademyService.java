@@ -10,7 +10,6 @@ import project.academyshow.controller.response.ReviewStatistics;
 import project.academyshow.entity.Academy;
 import project.academyshow.entity.Review;
 import project.academyshow.repository.AcademyRepository;
-import project.academyshow.repository.PostRepository;
 import project.academyshow.repository.ReviewRepository;
 
 import javax.persistence.Tuple;
