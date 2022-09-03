@@ -1,9 +1,18 @@
 package project.academyshow.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 
 @Entity
-public class Post {
+@Getter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+public class Post extends AbstractTimestampEntity {
 
     @Id @GeneratedValue
     private Long id;
@@ -12,14 +21,31 @@ public class Post {
     @JoinColumn(name = "member_id")
     private Member member;
 
+    @Enumerated(EnumType.STRING)
+    private PostCategory category;
+
     private String title;
 
     @Lob
     private String content;
 
     @OneToOne
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "academy_id")
     private Academy academy;
 
-    private int star;
+    public String profileOfAcademy() {
+        return academy.getProfile();
+    }
+
+    public String profileOfMember() {
+        return member.getProfile();
+    }
+
+    public String nameOfAcademy() {
+        return academy.getName();
+    }
+
+    public String nameOfMember() {
+        return member.getName();
+    }
 }
