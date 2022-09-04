@@ -4,16 +4,21 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import project.academyshow.controller.request.ReviewRequest;
 import project.academyshow.controller.request.SearchRequest;
 import project.academyshow.controller.response.AcademyResponse;
 import project.academyshow.controller.response.ApiResponse;
+import project.academyshow.controller.response.ReferenceUpStatistics;
 import project.academyshow.controller.response.PostResponse;
 import project.academyshow.entity.Academy;
-import project.academyshow.entity.Post;
-import project.academyshow.entity.Review;
+
+import project.academyshow.entity.ReferenceType;
+
+import project.academyshow.security.entity.CustomUserDetails;
 import project.academyshow.service.AcademyService;
+import project.academyshow.service.LikeService;
 import project.academyshow.service.PostService;
 import project.academyshow.service.ReviewService;
 
@@ -27,6 +32,7 @@ public class AcademyController {
     private final AcademyService academyService;
     private final ReviewService reviewService;
     private final PostService postService;
+    private final LikeService likeService;
 
     /** 학원 검색 (Pageable: page(페이지), size(페이지 당 개수), sort(정렬 기준 필드명과 정렬방법) */
     @GetMapping("/academies")
@@ -56,22 +62,25 @@ public class AcademyController {
     }
 
     @GetMapping("/academy/{id}")
-    public ApiResponse<?> academy(@PathVariable("id") Long id) {
+    public ApiResponse<?> academy(@PathVariable("id") Long id, @AuthenticationPrincipal CustomUserDetails userDetails) {
         Optional<Academy> academy = academyService.findById(id);
-        if (academy.isPresent())
-            return ApiResponse.success(new AcademyResponse(academy.get()));
+        if (academy.isPresent()) {
+            Academy a = academy.get();
+            ReferenceUpStatistics like = likeService.getLikeInfoByReference(ReferenceType.ACADEMY, a.getId(), userDetails);
+            return ApiResponse.success(AcademyResponse.of(a, like));
+        }
         else
             return ApiResponse.resourceNotFound();
     }
 
     @GetMapping("/academy/{id}/reviews")
     public ApiResponse<?> findAllReview(@PathVariable("id") Long id, Pageable pageable) {
-        return ApiResponse.success(reviewService.findAll(pageable, Review.TYPE.ACADEMY, id));
+        return ApiResponse.success(reviewService.findAll(pageable, ReferenceType.ACADEMY, id));
     }
 
     @PostMapping("/academy/{id}/reviews")
     public ApiResponse<?> createReview(@PathVariable("id") Long id, @RequestBody ReviewRequest request) {
-        return ApiResponse.success(reviewService.create(request, Review.TYPE.ACADEMY, id));
+        return ApiResponse.success(reviewService.create(request, ReferenceType.ACADEMY, id));
     }
 
     /** 학원 리뷰 별점 통계 */
