@@ -3,6 +3,7 @@ package project.academyshow.controller.request;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import project.academyshow.entity.Member;
+import project.academyshow.entity.ReferenceType;
 import project.academyshow.entity.Review;
 
 
@@ -13,7 +14,7 @@ public class ReviewRequest {
     private Integer rating;
     private String reviewAge;
 
-    public Review toEntity(Review.TYPE type, Member member, Long reviewedId) {
+    public Review toEntity(ReferenceType type, Member member, Long reviewedId) {
         return Review.builder()
                 .type(type)
                 .reviewedId(reviewedId)

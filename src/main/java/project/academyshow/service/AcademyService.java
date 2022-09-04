@@ -8,7 +8,8 @@ import org.springframework.transaction.annotation.Transactional;
 import project.academyshow.controller.request.SearchRequest;
 import project.academyshow.controller.response.ReviewStatistics;
 import project.academyshow.entity.Academy;
-import project.academyshow.entity.Review;
+import project.academyshow.entity.ReferenceType;
+
 import project.academyshow.repository.AcademyRepository;
 import project.academyshow.repository.ReviewRepository;
 
@@ -33,7 +34,7 @@ public class AcademyService {
     }
 
     public ReviewStatistics reviewStatistics(Long id) {
-        List<Tuple> tuples = reviewRepository.countGroupByRatingForType(Review.TYPE.ACADEMY, id);
+        List<Tuple> tuples = reviewRepository.countGroupByRatingForType(ReferenceType.ACADEMY, id);
         return new ReviewStatistics(tuples);
     }
 }
