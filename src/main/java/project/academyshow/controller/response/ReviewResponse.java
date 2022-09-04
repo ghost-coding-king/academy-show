@@ -1,13 +1,14 @@
 package project.academyshow.controller.response;
 
 import lombok.Getter;
+import project.academyshow.entity.ReferenceType;
 import project.academyshow.entity.Review;
 
 @Getter
 public class ReviewResponse extends AbstractAcademyshowResponse{
     private final Long id;
     private final Long reviewedId;
-    private final Review.TYPE type;
+    private final ReferenceType type;
     private final String name;
     private final String profile;
     private final String comment;
