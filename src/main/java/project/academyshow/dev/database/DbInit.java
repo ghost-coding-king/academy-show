@@ -1,3 +1,4 @@
+
 package project.academyshow.dev.database;
 
 
@@ -10,6 +11,8 @@ import project.academyshow.entity.*;
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -24,6 +27,7 @@ public class DbInit {
         exampleInsert.insertNormalMember();
         exampleInsert.insertAcademyMember();
         exampleInsert.insertTutorMember();
+        exampleInsert.insertAcademyReview();
     }
 
     @Component
@@ -33,6 +37,10 @@ public class DbInit {
 
         private final EntityManager em;
         private final PasswordEncoder passwordEncoder;
+
+        private final List<Member> normalMembers = new ArrayList<>();
+        private final List<Member> academyMembers = new ArrayList<>();
+        private final List<Academy> academies = new ArrayList<>();
 
         public void insertSubject() {
             String[] subjects = {
@@ -70,6 +78,7 @@ public class DbInit {
                     .build();
 
             em.persist(member1);
+            normalMembers.add(member1);
         }
 
         public void insertAcademyMember() {
@@ -163,12 +172,12 @@ public class DbInit {
                     .providerType(ProviderType.LOCAL)
                     .build();
 
-            em.persist(academyMember1);
-            em.persist(academyMember2);
-            em.persist(academyMember3);
-            em.persist(academyMember4);
-            em.persist(academyMember5);
-            em.persist(academyMember6);
+            em.persist(academyMember1);    academyMembers.add(academyMember1);
+            em.persist(academyMember2);    academyMembers.add(academyMember2);
+            em.persist(academyMember3);    academyMembers.add(academyMember3);
+            em.persist(academyMember4);    academyMembers.add(academyMember4);
+            em.persist(academyMember5);    academyMembers.add(academyMember5);
+            em.persist(academyMember6);    academyMembers.add(academyMember6);
             em.flush();
 
             Academy academy1 = Academy.builder()
@@ -261,12 +270,12 @@ public class DbInit {
                     .profile("http://localhost:8081/api/files/10008")
                     .build();
 
-            em.persist(academy1);
-            em.persist(academy2);
-            em.persist(academy3);
-            em.persist(academy4);
-            em.persist(academy5);
-            em.persist(academy6);
+            em.persist(academy1);   academies.add(academy1);
+            em.persist(academy2);   academies.add(academy2);
+            em.persist(academy3);   academies.add(academy3);
+            em.persist(academy4);   academies.add(academy4);
+            em.persist(academy5);   academies.add(academy5);
+            em.persist(academy6);   academies.add(academy6);
         }
 
         public void insertTutorMember() {
@@ -297,6 +306,90 @@ public class DbInit {
                     .build();
 
             em.persist(tutorInfo1);
+        }
+
+        /** 아카데미 리뷰 데이터 */
+        public void insertAcademyReview() {
+            Review review1 = Review.builder()
+                    .type(ReferenceType.ACADEMY)
+                    .reviewedId(academies.get(0).getId())
+                    .member(normalMembers.get(0))
+                    .reviewAge("고등학교 1학년")
+                    .comment("참 못 가르쳐요")
+                    .rating(1)
+                    .build();
+
+            Review review2 = Review.builder()
+                    .type(ReferenceType.ACADEMY)
+                    .reviewedId(academies.get(0).getId())
+                    .member(academyMembers.get(0))
+                    .reviewAge("고등학교 2학년")
+                    .comment("의사양반 이게 무슨소리야 못가르친다니 내가 0점이라니")
+                    .rating(2)
+                    .build();
+
+            Review review3 = Review.builder()
+                    .type(ReferenceType.ACADEMY)
+                    .reviewedId(academies.get(0).getId())
+                    .member(academyMembers.get(1))
+                    .reviewAge("중학교 1학년")
+                    .comment("선생님이 잘생겻어요")
+                    .rating(5)
+                    .build();
+
+            Review review4 = Review.builder()
+                    .type(ReferenceType.ACADEMY)
+                    .reviewedId(academies.get(1).getId())
+                    .member(academyMembers.get(2))
+                    .reviewAge("중학교 3학년")
+                    .comment("이 사람 사기꾼입니다 밎지 마세요")
+                    .rating(2)
+                    .build();
+
+            Review review5 = Review.builder()
+                    .type(ReferenceType.ACADEMY)
+                    .reviewedId(academies.get(2).getId())
+                    .member(academyMembers.get(3))
+                    .reviewAge("고등학교 1학년")
+                    .comment("역시 부두술 전문가!!")
+                    .rating(4)
+                    .build();
+
+            Review review6 = Review.builder()
+                    .type(ReferenceType.ACADEMY)
+                    .reviewedId(academies.get(3).getId())
+                    .member(academyMembers.get(4))
+                    .reviewAge("고등학교 2학년")
+                    .comment("이제 비행기 없어도 해외여행 쌉가능")
+                    .rating(1)
+                    .build();
+
+            Review review7 = Review.builder()
+                    .type(ReferenceType.ACADEMY)
+                    .reviewedId(academies.get(4).getId())
+                    .member(academyMembers.get(5))
+                    .reviewAge("고등학교 2학년")
+                    .comment("I cant speak english")
+                    .rating(5)
+                    .build();
+
+            Review review8 = Review.builder()
+                    .type(ReferenceType.ACADEMY)
+                    .reviewedId(academies.get(5).getId())
+                    .member(academyMembers.get(5))
+                    .reviewAge("성인")
+                    .comment("링가르디움 레비오우사")
+                    .rating(2)
+                    .build();
+
+            em.persist(review1);
+            em.persist(review2);
+            em.persist(review3);
+            em.persist(review4);
+            em.persist(review5);
+            em.persist(review6);
+            em.persist(review7);
+            em.persist(review8);
         }
     }
 }
