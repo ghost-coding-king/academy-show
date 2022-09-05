@@ -70,7 +70,7 @@ public class AuthController {
                                    @RequestBody LoginRequest loginRequest) {
         AuthToken accessToken = authService.login(request, response, loginRequest);
         if (accessToken == null)
-            return ResponseEntity.ok(ApiResponse.authenticateFailed());
+            return ResponseEntity.ok(ApiResponse.AUTHENTICATE_FAILED_RESPONSE);
         else {
             return ResponseEntity.ok()
                     .header(HttpHeaders.AUTHORIZATION, accessToken.getToken())
@@ -84,7 +84,7 @@ public class AuthController {
                                           HttpServletResponse response) {
         AuthToken accessToken = authService.refresh(request, response);
         if (accessToken == null)
-            return ResponseEntity.ok(ApiResponse.authenticateFailed());
+            return ResponseEntity.ok(ApiResponse.AUTHENTICATE_FAILED_RESPONSE);
         else {
             return ResponseEntity.ok()
                     .header(HttpHeaders.AUTHORIZATION, accessToken.getToken())
