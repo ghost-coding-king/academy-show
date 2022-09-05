@@ -70,7 +70,7 @@ public class AcademyController {
             return ApiResponse.success(AcademyResponse.of(a, like));
         }
         else
-            return ApiResponse.resourceNotFound();
+            return ApiResponse.RESOURCE_NOT_FOUND_RESPONSE;
     }
 
     @GetMapping("/academy/{id}/reviews")
