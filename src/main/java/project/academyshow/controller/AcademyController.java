@@ -8,10 +8,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import project.academyshow.controller.request.ReviewRequest;
 import project.academyshow.controller.request.SearchRequest;
-import project.academyshow.controller.response.AcademyResponse;
-import project.academyshow.controller.response.ApiResponse;
-import project.academyshow.controller.response.ReferenceUpStatistics;
-import project.academyshow.controller.response.PostResponse;
+import project.academyshow.controller.response.*;
 import project.academyshow.entity.Academy;
 
 import project.academyshow.entity.ReferenceType;
@@ -36,14 +33,21 @@ public class AcademyController {
 
     /** 학원 검색 (Pageable: page(페이지), size(페이지 당 개수), sort(정렬 기준 필드명과 정렬방법) */
     @GetMapping("/academies")
-    public ApiResponse<?> academies(SearchRequest searchRequest, Pageable pageable) {
+    public ApiResponse<?> academies(@AuthenticationPrincipal CustomUserDetails user,
+                                    SearchRequest searchRequest, Pageable pageable) {
         Page<AcademySearchResponse> resources = academyService.search(searchRequest, pageable)
-                .map(AcademySearchResponse::new);
+                .map(a -> {
+                    ReferenceUpStatistics upStatistics =
+                            likeService.getLikeInfoByReference(ReferenceType.ACADEMY, a.getId(), user);
+                    ReviewStatistics reviewStatistics = academyService.reviewStatistics(a.getId());
+                    return new AcademySearchResponse(a, upStatistics, reviewStatistics);
+                });
         return ApiResponse.success(resources);
     }
 
     @Data
     private static class AcademySearchResponse {
+
         private Long id;
         private String name;
         private String profile;
@@ -51,13 +55,20 @@ public class AcademyController {
         private String roadAddress;
         private String subAddress;
 
-        private AcademySearchResponse(Academy academy) {
+        private ReferenceUpStatistics upStatistics;
+        private ReviewStatistics reviewStatistics;
+
+        private AcademySearchResponse(Academy academy,
+                                      ReferenceUpStatistics upStatistics,
+                                      ReviewStatistics reviewStatistics) {
             id = academy.getId();
             name = academy.getName();
             profile = academy.getProfile();
             introduce = academy.getIntroduce();
             roadAddress = academy.getRoadAddress();
             subAddress = academy.getSubAddress();
+            this.upStatistics = upStatistics;
+            this.reviewStatistics = reviewStatistics;
         }
     }
 
