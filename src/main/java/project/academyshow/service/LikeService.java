@@ -23,9 +23,12 @@ public class LikeService {
     private final LikeRepository likeRepository;
 
     public void createOrDestroy(UpRequest request, CustomUserDetails userDetails) {
-        Optional<Up> like = getLikeByComponentAndMember(request.getType(),
-                                                          request.getReferenceId(),
-                                                          userDetails.getMember());
+        Optional<Up> like = getLikeByComponentAndMember(
+                request.getType(),
+                request.getReferenceId(),
+                userDetails.getMember()
+        );
+
         if(like.isPresent())
             likeRepository.delete(like.get());
         else
@@ -34,7 +37,7 @@ public class LikeService {
 
     public ReferenceUpStatistics getLikeInfoByReference(ReferenceType type, Long componentId, CustomUserDetails userDetails) {
         if(Objects.isNull(userDetails))
-            return ReferenceUpStatistics.notAuthenticatedof(likeCountByReference(type, componentId));
+            return ReferenceUpStatistics.notAuthenticatedOf(likeCountByReference(type, componentId));
 
         return ReferenceUpStatistics.of(likeCountByReference(type, componentId),
                                isLikeClicked(type, componentId, userDetails));
