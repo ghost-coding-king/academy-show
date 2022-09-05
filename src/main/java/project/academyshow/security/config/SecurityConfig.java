@@ -70,6 +70,7 @@ public class SecurityConfig {
                     .antMatchers("/api/academies").permitAll()
                     .antMatchers("/api/files/**").permitAll()
                     .antMatchers(HttpMethod.GET, "/api/academy/**").permitAll()
+                    .antMatchers(HttpMethod.GET, "/api/posts/**").permitAll()
                     .anyRequest().authenticated();
 
         /* jwtTokenFilter 등록 */
