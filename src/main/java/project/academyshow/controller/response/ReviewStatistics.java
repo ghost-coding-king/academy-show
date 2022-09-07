@@ -27,7 +27,9 @@ public class ReviewStatistics {
             averageStar += (i + 1) * count[i];
         }
 
-        if (totalReviews > 0)
+        if (totalReviews > 0) {
             averageStar /= totalReviews;
+            averageStar = Math.round(averageStar * 10) / 10.0;
+        }
     }
 }

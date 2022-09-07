@@ -32,9 +32,9 @@ public class ReviewService {
                 reviewRepository.findAllByTypeEqualsAndReviewedIdEquals(pageable, type, reviewedId));
     }
 
-    public ReviewResponse create(ReviewRequest request, ReferenceType type, Long reviewedId) {
+    public ReviewResponse create(ReviewRequest request, ReferenceType type, Long referenceId) {
         Member member = AuthUtil.getLoggedInMember();
-        return ReviewResponse.of(reviewRepository.save(request.toEntity(type, member, reviewedId)));
+        return ReviewResponse.of(reviewRepository.save(request.toEntity(type, member, referenceId)));
     }
 
     public ReviewResponse update(ReviewRequest request, Long id) {

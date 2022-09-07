@@ -17,12 +17,12 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
                 "from Review r " +
                 "inner join fetch r.member " +
                 "where r.type = :type " +
-                "and r.reviewedId = :reviewedId " +
+                "and r.referenceId = :reviewedId " +
                 "order by r.createdAt desc ",
         countQuery = "select count(r) " +
                      "from Review r " +
                      "where r.type = :type " +
-                     "and r.reviewedId = :reviewedId "
+                     "and r.referenceId = :reviewedId "
     )
     Page<Review> findAllByTypeEqualsAndReviewedIdEquals(Pageable pageable, ReferenceType type, Long reviewedId);
 
@@ -33,7 +33,7 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     @Query("select count(r), r.rating " +
             "from Review r " +
             "where r.type = :type " +
-            "and r.reviewedId = :id " +
+            "and r.referenceId = :id " +
             "group by r.rating ")
     List<Tuple> countGroupByRatingForType(ReferenceType type, Long id);
 }

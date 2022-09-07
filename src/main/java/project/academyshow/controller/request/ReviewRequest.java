@@ -14,10 +14,10 @@ public class ReviewRequest {
     private Integer rating;
     private String reviewAge;
 
-    public Review toEntity(ReferenceType type, Member member, Long reviewedId) {
+    public Review toEntity(ReferenceType type, Member member, Long referenceId) {
         return Review.builder()
                 .type(type)
-                .reviewedId(reviewedId)
+                .referenceId(referenceId)
                 .comment(comment)
                 .rating(rating)
                 .reviewAge(reviewAge)

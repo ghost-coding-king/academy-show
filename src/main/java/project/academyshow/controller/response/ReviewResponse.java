@@ -18,7 +18,7 @@ public class ReviewResponse extends AbstractAcademyshowResponse{
     private ReviewResponse(Review review) {
         super(review);
         id = review.getId();
-        reviewedId = review.getReviewedId();
+        reviewedId = review.getReferenceId();
         type = review.getType();
         name = review.getMember().getName();
         profile = review.getMember().getProfile();

@@ -20,7 +20,7 @@ public class Review extends AbstractTimestampEntity {
     private ReferenceType type;
 
     @Column
-    private Long reviewedId;
+    private Long referenceId;
 
     @OneToOne
     @JoinColumn(name = "member_id")
