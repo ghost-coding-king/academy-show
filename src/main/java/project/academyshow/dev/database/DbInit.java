@@ -174,15 +174,40 @@ public class DbInit {
                     {
                             "tutor1", "수지", "13524", "경기 성남시 분당구 대왕판교로606번길 45 (판교역 프루지오 시티)",
                             "경기 성남시 분당구 삼평동 653", "http://localhost:8081/api/files/10002"
-                    }
+                    },
+                    {
+                            "tutor2", "아인즈", "13524", "강원 춘천시 남춘천역",
+                            "강원 춘천시 남춘천역", null
+                    },
+                    {
+                            "tutor3", "희준", "23411", "강원 강릉시 강릉고등학교",
+                            "강원 강릉시 강릉고등학교", null
+                    },
+                    {
+                            "tutor4", "찬진", "11271", "경북 구미시 대학로 61",
+                            "경북 구미시 대학로", null
+                    },
             };
 
             Arrays.stream(memberInfos).forEach(this::createTutorMember);
 
             String[][] tutorInfo = {
-                            /* scholarship, educations, subjects */
+                            /* scholarship, educations, subjects, title, introduce, area */
                     {
-                            "서울대학교", "중학교 1학년,중학교 2학년,중학교 3학년,고등학교 1학년,고등학교 2학년", "영어"
+                            "서울대학교", "중학교 1학년,중학교 2학년,중학교 3학년,고등학교 1학년,고등학교 2학년", "영어",
+                            "전교 1등 만들어 드립니다!", "강남에서 제일 잘나갑니다", "서울 강남구"
+                    },
+                    {
+                            "강원대학교", "중학교 1학년,중학교 2학년,중학교 3학년", "수학,영어",
+                            "전교 10등 만들어 드립니다!", "믿고 맡겨만 주시죠 호호", "강원 춘천시"
+                    },
+                    {
+                            "강릉원주대학교", "중학교 1학년,중학교 2학년,중학교 3학년", "사회",
+                            "전교 100등 만들어 드립니다!", "신토불이 입니다.", "강원 강릉시"
+                    },
+                    {
+                            "금오공과대학교", "고등학교 1학년,고등학교 2학년", "SW교육/코딩교육",
+                            "뷰 고수 만들어 드립니다.", "뷰 경력 1달", "경북 구미시"
                     }
             };
 
@@ -308,6 +333,10 @@ public class DbInit {
                     .certification("개인과외교습자 등록 파일 경로")
                     .educations(info[1])
                     .subjects(info[2])
+                    .title(info[3])
+                    .introduce(info[4])
+                    .area(info[5])
+                    .isExposed(true)
                     .build();
 
             em.persist(tutorInfo);
