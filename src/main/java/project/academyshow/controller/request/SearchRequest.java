@@ -1,13 +1,14 @@
 package project.academyshow.controller.request;
 
 import lombok.Data;
+import project.academyshow.entity.SearchType;
 
 import java.util.List;
 
 @Data
 public class SearchRequest {
 
-    private String searchType;
+    private SearchType searchType;
     private String q;
     private List<String> educations;
     private List<String> subjects;

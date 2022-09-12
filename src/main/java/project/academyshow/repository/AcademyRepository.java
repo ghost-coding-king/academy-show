@@ -16,4 +16,6 @@ public interface AcademyRepository extends JpaRepository<Academy, Long> {
             "and educations regexp(:#{#searchRequest.educationRegexp}) " +
             "and jibun_address like %:#{#searchRequest.area}%", nativeQuery = true)
     Page<Academy> findAll(SearchRequest searchRequest, Pageable pageable);
+
+    Page<Academy> findByNameContaining(String name, Pageable pageable);
 }

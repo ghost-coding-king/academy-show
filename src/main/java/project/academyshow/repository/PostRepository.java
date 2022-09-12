@@ -4,10 +4,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import project.academyshow.controller.request.PostRequest;
 import project.academyshow.entity.Post;
-
-import java.util.Optional;
+import project.academyshow.entity.PostCategory;
 
 public interface PostRepository extends JpaRepository<Post, Long> {
 //    @Query(
@@ -27,6 +25,8 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "from Post p " +
             "where p.academy.id = :id")
     Page<Post> findAllByAcademy(Long id, Pageable pageable);
+
+    Page<Post> findAllByCategory(PostCategory category, Pageable pageable);
 
 //    @Query("select p " +
 //            "from Post p " +

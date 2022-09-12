@@ -12,19 +12,15 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Review extends AbstractTimestampEntity {
-    public enum TYPE {
-        ACADEMY, TUTOR
-    }
-
     @Id
     @GeneratedValue
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    private TYPE type;
+    private ReferenceType type;
 
     @Column
-    private Long reviewedId;
+    private Long referenceId;
 
     @OneToOne
     @JoinColumn(name = "member_id")

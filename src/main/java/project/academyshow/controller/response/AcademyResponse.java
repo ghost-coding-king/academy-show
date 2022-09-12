@@ -20,8 +20,9 @@ public class AcademyResponse {
     private List<String> subjects;
     private List<String> educations;
     private boolean shuttle;
+    private ReferenceUpStatistics upStatistics;
 
-    public AcademyResponse(Academy academy) {
+    public AcademyResponse(Academy academy, ReferenceUpStatistics upStatistics) {
         id = academy.getId();
         name = academy.getName();
         profile = academy.getProfile();
@@ -32,5 +33,10 @@ public class AcademyResponse {
         subjects = Arrays.stream(academy.getSubjects().split(",")).collect(Collectors.toList());
         educations = Arrays.stream(academy.getEducations().split(",")).collect(Collectors.toList());
         shuttle = academy.isShuttle();
+        this.upStatistics = upStatistics;
+    }
+
+    public static AcademyResponse of(Academy academy, ReferenceUpStatistics upStatistics) {
+        return new AcademyResponse(academy, upStatistics);
     }
 }

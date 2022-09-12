@@ -6,20 +6,20 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestMapping;
 import project.academyshow.controller.request.ReviewRequest;
 import project.academyshow.controller.response.ReviewResponse;
 import project.academyshow.entity.Member;
+import project.academyshow.entity.ReferenceType;
 import project.academyshow.entity.Review;
 import project.academyshow.repository.ReviewRepository;
 import project.academyshow.security.AuthUtil;
 
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class ReviewService {
+
     private final ReviewRepository reviewRepository;
     private final MemberService memberService;
 
@@ -27,14 +27,14 @@ public class ReviewService {
         return toResponseDtoPage(reviewRepository.findAll(pageable));
     }
 
-    public Page<ReviewResponse> findAll(Pageable pageable, Review.TYPE type, Long reviewedId) {
+    public Page<ReviewResponse> findAll(Pageable pageable, ReferenceType type, Long reviewedId) {
         return toResponseDtoPage(
                 reviewRepository.findAllByTypeEqualsAndReviewedIdEquals(pageable, type, reviewedId));
     }
 
-    public ReviewResponse create(ReviewRequest request, Review.TYPE type, Long reviewedId) {
+    public ReviewResponse create(ReviewRequest request, ReferenceType type, Long referenceId) {
         Member member = AuthUtil.getLoggedInMember();
-        return ReviewResponse.of(reviewRepository.save(request.toEntity(type, member, reviewedId)));
+        return ReviewResponse.of(reviewRepository.save(request.toEntity(type, member, referenceId)));
     }
 
     public ReviewResponse update(ReviewRequest request, Long id) {

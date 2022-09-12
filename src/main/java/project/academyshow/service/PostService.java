@@ -9,6 +9,7 @@ import project.academyshow.controller.request.PostRequest;
 import project.academyshow.entity.Academy;
 import project.academyshow.entity.Member;
 import project.academyshow.entity.Post;
+import project.academyshow.entity.PostCategory;
 import project.academyshow.repository.AcademyRepository;
 import project.academyshow.repository.PostRepository;
 
@@ -35,5 +36,9 @@ public class PostService {
     public Post findById(Long id) {
         return postRepository.findById(id).orElseThrow(
                 () -> new RuntimeException("해당 게시물을 찾을수 없습니다."));
+    }
+
+    public Page<Post> findAllByCategory(PostCategory category, Pageable pageable) {
+        return postRepository.findAllByCategory(category, pageable);
     }
 }
