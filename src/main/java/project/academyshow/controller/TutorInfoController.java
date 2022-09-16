@@ -9,12 +9,14 @@ import org.springframework.web.bind.annotation.*;
 import project.academyshow.controller.request.ReviewRequest;
 import project.academyshow.controller.request.SearchRequest;
 import project.academyshow.controller.response.ApiResponse;
+import project.academyshow.controller.response.PostResponse;
 import project.academyshow.controller.response.ReferenceUpStatistics;
 import project.academyshow.controller.response.ReviewStatistics;
 import project.academyshow.entity.ReferenceType;
 import project.academyshow.entity.TutorInfo;
 import project.academyshow.security.entity.CustomUserDetails;
 import project.academyshow.service.LikeService;
+import project.academyshow.service.PostService;
 import project.academyshow.service.ReviewService;
 import project.academyshow.service.TutorInfoService;
 
@@ -29,6 +31,7 @@ import java.util.stream.Collectors;
 public class TutorInfoController {
 
     private final TutorInfoService tutorInfoService;
+    private final PostService postService;
     private final ReviewService reviewService;
     private final LikeService likeService;
 
@@ -71,6 +74,11 @@ public class TutorInfoController {
     @GetMapping("/tutor/{id}/reviews/statistics")
     public ApiResponse<?> reviewStatistics(@PathVariable("id") Long id) {
         return ApiResponse.success(tutorInfoService.reviewStatistics(id));
+    }
+
+    @GetMapping("/tutor/{id}/posts")
+    public ApiResponse<?> findAllPosts(@PathVariable("id") Long id, Pageable pageable) {
+        return ApiResponse.success(postService.findAllByTutorInfo(id, pageable).map(PostResponse::ofList));
     }
 
 

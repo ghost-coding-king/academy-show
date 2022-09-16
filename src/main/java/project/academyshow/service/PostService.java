@@ -40,12 +40,16 @@ public class PostService {
         return postRepository.findAllByAcademy(id, pageable);
     }
 
+    public Page<Post> findAllByTutorInfo(Long id, Pageable pageable) {
+        return postRepository.findAllByTutorInfo(id, pageable);
+    }
+
     public Post findById(Long id) {
         return postRepository.findById(id).orElseThrow(
                 () -> new RuntimeException("해당 게시물을 찾을수 없습니다."));
     }
 
     public Page<Post> findAllByCategory(PostCategory category, Pageable pageable) {
-        return postRepository.findAllByCategory(category, pageable);
+        return postRepository.findAllByCategoryOrderByCreatedAtDesc(category, pageable);
     }
 }
