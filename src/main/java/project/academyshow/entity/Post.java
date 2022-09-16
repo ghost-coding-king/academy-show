@@ -33,6 +33,10 @@ public class Post extends AbstractTimestampEntity {
     @JoinColumn(name = "academy_id")
     private Academy academy;
 
+    @OneToOne
+    @JoinColumn(name = "tutor_info_id")
+    private TutorInfo tutorInfo;
+
     public String profileOfAcademy() {
         return academy.getProfile();
     }
