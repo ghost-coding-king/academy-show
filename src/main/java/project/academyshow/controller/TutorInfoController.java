@@ -64,6 +64,7 @@ public class TutorInfoController {
     private static class TutorInfoSearchResponse {
 
         private Long id;
+        private String name;
         private String title;
         private String profile;
         private String introduce;
@@ -76,6 +77,7 @@ public class TutorInfoController {
                                         ReferenceUpStatistics upStatistics,
                                         ReviewStatistics reviewStatistics) {
             id = tutorInfo.getId();
+            name = tutorInfo.getMember().getName();
             title = tutorInfo.getTitle();
             profile = tutorInfo.getMember().getProfile();
             introduce = tutorInfo.getIntroduce();
@@ -90,6 +92,7 @@ public class TutorInfoController {
     private static class TutorInfoResponse {
 
         private Long id;
+        private String name;
         private String title;
         private String profile;
         private String introduce;
@@ -104,6 +107,7 @@ public class TutorInfoController {
         private TutorInfoResponse(TutorInfo tutorInfo,
                                   ReferenceUpStatistics upStatistics) {
             id = tutorInfo.getId();
+            name = tutorInfo.getMember().getName();
             title = tutorInfo.getTitle();
             profile = tutorInfo.getMember().getProfile();
             introduce = tutorInfo.getIntroduce();
