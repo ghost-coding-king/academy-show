@@ -5,18 +5,19 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import project.academyshow.controller.request.ReviewRequest;
 import project.academyshow.controller.request.SearchRequest;
 import project.academyshow.controller.response.ApiResponse;
+import project.academyshow.controller.response.PostResponse;
 import project.academyshow.controller.response.ReferenceUpStatistics;
 import project.academyshow.controller.response.ReviewStatistics;
 import project.academyshow.entity.ReferenceType;
 import project.academyshow.entity.TutorInfo;
 import project.academyshow.security.entity.CustomUserDetails;
 import project.academyshow.service.LikeService;
+import project.academyshow.service.PostService;
+import project.academyshow.service.ReviewService;
 import project.academyshow.service.TutorInfoService;
 
 import java.util.Arrays;
@@ -30,6 +31,8 @@ import java.util.stream.Collectors;
 public class TutorInfoController {
 
     private final TutorInfoService tutorInfoService;
+    private final PostService postService;
+    private final ReviewService reviewService;
     private final LikeService likeService;
 
     @GetMapping("/tutors")
@@ -57,6 +60,28 @@ public class TutorInfoController {
             return ApiResponse.RESOURCE_NOT_FOUND_RESPONSE;
     }
 
+    @GetMapping("/tutor/{id}/reviews")
+    public ApiResponse<?> findAllReview(@PathVariable("id") Long id, Pageable pageable) {
+        return ApiResponse.success(reviewService.findAll(pageable, ReferenceType.TUTOR, id));
+    }
+
+    @PostMapping("/tutor/{id}/reviews")
+    public ApiResponse<?> createReview(@PathVariable("id") Long id, @RequestBody ReviewRequest request) {
+        return ApiResponse.success(reviewService.create(request, ReferenceType.TUTOR, id));
+    }
+
+    /** 과외 리뷰 별점 통계 */
+    @GetMapping("/tutor/{id}/reviews/statistics")
+    public ApiResponse<?> reviewStatistics(@PathVariable("id") Long id) {
+        return ApiResponse.success(tutorInfoService.reviewStatistics(id));
+    }
+
+    @GetMapping("/tutor/{id}/posts")
+    public ApiResponse<?> findAllPosts(@PathVariable("id") Long id, Pageable pageable) {
+        return ApiResponse.success(postService.findAllByTutorInfo(id, pageable).map(PostResponse::ofList));
+    }
+
+
     /**
      * Response DTO
      */
@@ -64,6 +89,7 @@ public class TutorInfoController {
     private static class TutorInfoSearchResponse {
 
         private Long id;
+        private String name;
         private String title;
         private String profile;
         private String introduce;
@@ -76,6 +102,7 @@ public class TutorInfoController {
                                         ReferenceUpStatistics upStatistics,
                                         ReviewStatistics reviewStatistics) {
             id = tutorInfo.getId();
+            name = tutorInfo.getMember().getName();
             title = tutorInfo.getTitle();
             profile = tutorInfo.getMember().getProfile();
             introduce = tutorInfo.getIntroduce();
@@ -90,6 +117,7 @@ public class TutorInfoController {
     private static class TutorInfoResponse {
 
         private Long id;
+        private String name;
         private String title;
         private String profile;
         private String introduce;
@@ -104,6 +132,7 @@ public class TutorInfoController {
         private TutorInfoResponse(TutorInfo tutorInfo,
                                   ReferenceUpStatistics upStatistics) {
             id = tutorInfo.getId();
+            name = tutorInfo.getMember().getName();
             title = tutorInfo.getTitle();
             profile = tutorInfo.getMember().getProfile();
             introduce = tutorInfo.getIntroduce();

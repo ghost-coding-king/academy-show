@@ -98,6 +98,7 @@ public class AuthController {
         private String profile;
         private RoleType role;
         private Long myAcademyId;
+        private Long myTutorId;
     }
 
     /** Access Token 발급 후 username, role 정보 */
@@ -113,6 +114,8 @@ public class AuthController {
         loginInfo.setRole(RoleType.valueOf(claims.get(AuthTokenProvider.AUTHORITIES_KEY).toString()));
         if (loginInfo.getRole() == RoleType.ROLE_ACADEMY)
             loginInfo.setMyAcademyId(member.get().getAcademy().getId());
+        else if (loginInfo.getRole() == RoleType.ROLE_TUTOR)
+            loginInfo.setMyTutorId(member.get().getTutorInfo().getId());
         return loginInfo;
     }
 }

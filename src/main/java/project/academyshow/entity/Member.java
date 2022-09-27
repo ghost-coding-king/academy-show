@@ -42,6 +42,9 @@ public class Member {
     @OneToOne(mappedBy = "member", fetch = FetchType.LAZY)
     private Academy academy;
 
+    @OneToOne(mappedBy = "member", fetch = FetchType.LAZY)
+    private TutorInfo tutorInfo;
+
     /** 내 정보 수정 */
     public void updateMember(MyInfo myInfo) {
         if (!StringUtils.hasText(myInfo.getProfile())) myInfo.setProfile(null);

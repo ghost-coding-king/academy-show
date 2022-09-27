@@ -23,10 +23,17 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     @Query("select p " +
             "from Post p " +
-            "where p.academy.id = :id")
+            "where p.academy.id = :id " +
+            "order by p.createdAt desc")
     Page<Post> findAllByAcademy(Long id, Pageable pageable);
 
-    Page<Post> findAllByCategory(PostCategory category, Pageable pageable);
+    @Query("select p " +
+            "from Post p " +
+            "where p.tutorInfo.id = :id " +
+            "order by p.createdAt desc")
+    Page<Post> findAllByTutorInfo(Long id, Pageable pageable);
+
+    Page<Post> findAllByCategoryOrderByCreatedAtDesc(PostCategory category, Pageable pageable);
 
 //    @Query("select p " +
 //            "from Post p " +

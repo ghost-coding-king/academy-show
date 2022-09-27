@@ -298,6 +298,7 @@ public class DbInit {
                     .title(title)
                     .content(content)
                     .category(PostCategory.ACADEMY_NEWS)
+                    .tutorInfo(null)
                     .build();
 
             em.persist(post);

@@ -6,12 +6,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.academyshow.controller.request.PostRequest;
-import project.academyshow.entity.Academy;
-import project.academyshow.entity.Member;
-import project.academyshow.entity.Post;
-import project.academyshow.entity.PostCategory;
+import project.academyshow.entity.*;
 import project.academyshow.repository.AcademyRepository;
 import project.academyshow.repository.PostRepository;
+import project.academyshow.repository.TutorInfoRepository;
 
 import java.util.Optional;
 
@@ -21,16 +19,29 @@ import java.util.Optional;
 public class PostService {
 
     private final PostRepository postRepository;
+    private final TutorInfoRepository tutorInfoRepository;
     private final AcademyRepository academyRepository;
 
     public Post save(PostRequest postRequest, Member member) {
-        Optional<Academy> academy = academyRepository.findById(postRequest.getAcademyId());
-        academy.orElseThrow(() -> new IllegalArgumentException("없는 academy_id 입니다."));
-        return postRepository.save(postRequest.toEntity(member, academy.get()));
+        if(member.getRole() == RoleType.ROLE_ACADEMY) {
+            Optional<Academy> academy = academyRepository.findById(member.getAcademy().getId());
+            academy.orElseThrow(() -> new IllegalArgumentException("없는 academy_id 입니다."));
+            return postRepository.save(postRequest.toEntity(member, academy.get(), null));
+        }
+        else if(member.getRole() == RoleType.ROLE_TUTOR) {
+            Optional<TutorInfo> tutorInfo = tutorInfoRepository.findById(member.getTutorInfo().getId());
+            tutorInfo.orElseThrow(() -> new IllegalArgumentException("없는 tutor_info_id 입니다."));
+            return postRepository.save(postRequest.toEntity(member, null, tutorInfo.get()));
+        }
+        return null;
     }
 
     public Page<Post> findAllByAcademy(Long id, Pageable pageable) {
         return postRepository.findAllByAcademy(id, pageable);
+    }
+
+    public Page<Post> findAllByTutorInfo(Long id, Pageable pageable) {
+        return postRepository.findAllByTutorInfo(id, pageable);
     }
 
     public Post findById(Long id) {
@@ -39,6 +50,6 @@ public class PostService {
     }
 
     public Page<Post> findAllByCategory(PostCategory category, Pageable pageable) {
-        return postRepository.findAllByCategory(category, pageable);
+        return postRepository.findAllByCategoryOrderByCreatedAtDesc(category, pageable);
     }
 }
