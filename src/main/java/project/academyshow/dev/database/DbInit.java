@@ -129,37 +129,43 @@ public class DbInit {
             Arrays.stream(memberInfos).forEach(this::createAcademyMember);
 
             String[][] academyInfos = {
-                            /* postcode, roadAddress, jibunAddress, name, introduce, educations, subjects, profile */
+                            /* postcode, roadAddress, jibunAddress, name, introduce, educations, subjects, profile, call */
                     {
                             "13524", "경기 성남시 분당구 대왕판교로606번길 45 (판교역 프루지오 시티)",
                             "경기 성남시 분당구 삼평동 653", "수학연구소", "최고보다 최선을 다하겠습니다.",
-                            "고등학교 1학년,고등학교 2학년,고등학교 3학년", "수학", "http://localhost:8081/api/files/10003"
+                            "고등학교 1학년,고등학교 2학년,고등학교 3학년", "수학", "http://localhost:8081/api/files/10003",
+                            "01000000000"
                     },
                     {
                             "13524", "경기 성남시 분당구 대왕판교로606번길 45 (판교역 프루지오 시티)",
                             "경기 성남시 분당구 삼평동 653", "축지법 학원", "대한축지법협회 41대 회장 출신 원장 직강",
                             "중학교 1학년,중학교 2학년,중학교 3학년,고등학교 1학년,고등학교 2학년,고등학교 3학년,성인",
-                            "체육", "http://localhost:8081/api/files/10004"
+                            "체육", "http://localhost:8081/api/files/10004",
+                            "01010001000"
                     },
                     {
                             "13524", "경기 성남시 분당구 대왕판교로606번길 45 (판교역 프루지오 시티)",
                             "경기 성남시 분당구 삼평동 653", "부두술 전문학원", "부두술사관학교 출신 전문교사들이 가르칩니다.",
-                            "중학교 1학년,중학교 2학년,중학교 3학년", "기타", "http://localhost:8081/api/files/10005"
+                            "중학교 1학년,중학교 2학년,중학교 3학년", "기타", "http://localhost:8081/api/files/10005",
+                            "01014001420"
                     },
                     {
                             "13524", "경기 성남시 분당구 대왕판교로606번길 45 (판교역 프루지오 시티)",
                             "경기 성남시 분당구 삼평동 653", "탄탄 비행술", "아직도 걸어다니십니까? 이제는 날아다니는게 대세!",
-                            "고등학교 1학년,고등학교 2학년,고등학교 3학년,성인", "체육", "http://localhost:8081/api/files/10006"
+                            "고등학교 1학년,고등학교 2학년,고등학교 3학년,성인", "체육", "http://localhost:8081/api/files/10006",
+                            "01193933838"
                     },
                     {
                             "13524", "경기 성남시 분당구 대왕판교로606번길 45 (판교역 프루지오 시티)",
                             "경기 성남시 분당구 삼평동 653", "슈퍼 영어학원", "Hello. Nice to meet you, and you?",
-                            "고등학교 1학년,고등학교 2학년,고등학교 3학년,성인", "영어", "http://localhost:8081/api/files/10007"
+                            "고등학교 1학년,고등학교 2학년,고등학교 3학년,성인", "영어", "http://localhost:8081/api/files/10007",
+                            "01938382302"
                     },
                     {
                             "13524", "경기 성남시 분당구 대왕판교로606번길 45 (판교역 프루지오 시티)",
                             "경기 성남시 분당구 삼평동 653", "펑펑 미술학원", "폭발은 예술이다.",
-                            "고등학교 1학년,고등학교 2학년,고등학교 3학년,성인", "미술", "http://localhost:8081/api/files/10008"
+                            "고등학교 1학년,고등학교 2학년,고등학교 3학년,성인", "미술", "http://localhost:8081/api/files/10008",
+                            "017104310d0"
                     },
             };
 
@@ -192,22 +198,22 @@ public class DbInit {
             Arrays.stream(memberInfos).forEach(this::createTutorMember);
 
             String[][] tutorInfo = {
-                            /* scholarship, educations, subjects, title, introduce, area */
+                            /* scholarship, educations, subjects, title, introduce, area, call */
                     {
                             "서울대학교", "중학교 1학년,중학교 2학년,중학교 3학년,고등학교 1학년,고등학교 2학년", "영어",
-                            "전교 1등 만들어 드립니다!", "강남에서 제일 잘나갑니다", "서울 강남구"
+                            "전교 1등 만들어 드립니다!", "강남에서 제일 잘나갑니다", "서울 강남구", "02039392939"
                     },
                     {
                             "강원대학교", "중학교 1학년,중학교 2학년,중학교 3학년", "수학,영어",
-                            "전교 10등 만들어 드립니다!", "믿고 맡겨만 주시죠 호호", "강원 춘천시"
+                            "전교 10등 만들어 드립니다!", "믿고 맡겨만 주시죠 호호", "강원 춘천시", "01134893838"
                     },
                     {
                             "강릉원주대학교", "중학교 1학년,중학교 2학년,중학교 3학년", "사회",
-                            "전교 100등 만들어 드립니다!", "신토불이 입니다.", "강원 강릉시"
+                            "전교 100등 만들어 드립니다!", "신토불이 입니다.", "강원 강릉시", "01047381209"
                     },
                     {
                             "금오공과대학교", "고등학교 1학년,고등학교 2학년", "SW교육/코딩교육",
-                            "뷰 고수 만들어 드립니다.", "뷰 경력 1달", "경북 구미시"
+                            "뷰 고수 만들어 드립니다.", "뷰 경력 1달", "경북 구미시", "01123982937"
                     }
             };
 
@@ -338,6 +344,7 @@ public class DbInit {
                     .introduce(info[4])
                     .area(info[5])
                     .isExposed(true)
+                    .phone(info[6])
                     .build();
 
             em.persist(tutorInfo);
@@ -357,6 +364,7 @@ public class DbInit {
                     .educations(academyInfo[5])
                     .subjects(academyInfo[6])
                     .profile(academyInfo[7])
+                    .phone(academyInfo[8])
                     .build();
 
             em.persist(academy);

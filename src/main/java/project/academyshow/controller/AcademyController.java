@@ -54,6 +54,7 @@ public class AcademyController {
         private String introduce;
         private String roadAddress;
         private String subAddress;
+        private String phone;
 
         private ReferenceUpStatistics upStatistics;
         private ReviewStatistics reviewStatistics;
@@ -67,6 +68,8 @@ public class AcademyController {
             introduce = academy.getIntroduce();
             roadAddress = academy.getRoadAddress();
             subAddress = academy.getSubAddress();
+            phone = academy.getPhone();
+
             this.upStatistics = upStatistics;
             this.reviewStatistics = reviewStatistics;
         }

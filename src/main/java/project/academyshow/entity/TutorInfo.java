@@ -39,4 +39,6 @@ public class TutorInfo {
 
     // 대략적인 주소 정보 (강원도 강릉시)
     private String area;
+
+    private String phone;
 }

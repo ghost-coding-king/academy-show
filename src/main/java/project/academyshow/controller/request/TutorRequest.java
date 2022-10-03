@@ -14,6 +14,7 @@ public class TutorRequest {
     private List<Subject> subjects;
     private String scholarship;
     private String certification;
+    private String phone;
 
     public TutorInfo toEntity(Member member) {
         String educations = String.join(",", this.educations);
@@ -28,6 +29,7 @@ public class TutorRequest {
                 .certification(certification)
                 .educations(educations)
                 .subjects(subjects)
+                .phone(phone)
                 .build();
     }
 }
