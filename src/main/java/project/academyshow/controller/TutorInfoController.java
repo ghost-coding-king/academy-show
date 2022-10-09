@@ -94,6 +94,7 @@ public class TutorInfoController {
         private String profile;
         private String introduce;
         private String area;
+        private String phone;
 
         private ReferenceUpStatistics upStatistics;
         private ReviewStatistics reviewStatistics;
@@ -107,6 +108,7 @@ public class TutorInfoController {
             profile = tutorInfo.getMember().getProfile();
             introduce = tutorInfo.getIntroduce();
             area = tutorInfo.getArea();
+            phone = tutorInfo.getPhone();
 
             this.upStatistics = upStatistics;
             this.reviewStatistics = reviewStatistics;
@@ -122,6 +124,7 @@ public class TutorInfoController {
         private String profile;
         private String introduce;
         private String area;
+        private String phone;
 
         private String scholarship;
         private List<String> subjects;
@@ -137,6 +140,7 @@ public class TutorInfoController {
             profile = tutorInfo.getMember().getProfile();
             introduce = tutorInfo.getIntroduce();
             area = tutorInfo.getArea();
+            phone = tutorInfo.getPhone();
             scholarship = tutorInfo.getScholarship();
             subjects = Arrays.stream(tutorInfo.getSubjects().split(",")).collect(Collectors.toList());
             educations = Arrays.stream(tutorInfo.getEducations().split(",")).collect(Collectors.toList());

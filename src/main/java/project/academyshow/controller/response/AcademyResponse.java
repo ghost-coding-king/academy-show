@@ -17,6 +17,7 @@ public class AcademyResponse {
     private String roadAddress;
     private String jibunAddress;
     private String subAddress;
+    private String phone;
     private List<String> subjects;
     private List<String> educations;
     private boolean shuttle;
@@ -33,6 +34,7 @@ public class AcademyResponse {
         subjects = Arrays.stream(academy.getSubjects().split(",")).collect(Collectors.toList());
         educations = Arrays.stream(academy.getEducations().split(",")).collect(Collectors.toList());
         shuttle = academy.isShuttle();
+        phone = academy.getPhone();
         this.upStatistics = upStatistics;
     }
 

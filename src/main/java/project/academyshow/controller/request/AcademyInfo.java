@@ -25,6 +25,7 @@ public class AcademyInfo {
     private String introduce;
     private String registrationFile;
     private String profile;
+    private String phone;
 
     public Academy toEntity(Member savedMember) {
         if (!StringUtils.hasText(profile)) profile = null;
@@ -49,6 +50,7 @@ public class AcademyInfo {
                 .educations(educations)
                 .subjects(subjects)
                 .profile(profile)
+                .phone(phone)
                 .build();
     }
 }

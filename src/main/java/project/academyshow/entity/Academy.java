@@ -37,6 +37,8 @@ public class Academy {
     private String businessRegistration;
     private String profile;
 
+    private String phone;
+
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;

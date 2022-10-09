@@ -44,6 +44,7 @@ cors:
 # app property
 app:
   filePath: '/Users/woo/upload-test'
+  domainUrl: 'http://localhost:8081'
 
 # jwt
 jwt:
