@@ -229,11 +229,11 @@ public class DbInit {
             );
             createReview(
                     ReferenceType.ACADEMY, academies.get(0).getId(), normalMembers.get(1),
-                    "고등학교 2학년", "의사양반 이게 무슨소리야 못가르친다니 내가 0점이라니", 2
+                    "고등학교 2학년", "잘 못 가르치는 것 같아요.", 2
             );
             createReview(
                     ReferenceType.ACADEMY, academies.get(0).getId(), academyMembers.get(1),
-                    "중학교 1학년", "선생님이 잘생겻어요", 5
+                    "중학교 1학년", "선생님이 잘생겼어요", 5
             );
             createReview(
                     ReferenceType.ACADEMY, academies.get(1).getId(), academyMembers.get(2),
@@ -241,11 +241,11 @@ public class DbInit {
             );
             createReview(
                     ReferenceType.ACADEMY, academies.get(2).getId(), academyMembers.get(3),
-                    "고등학교 1학년", "역시 부두술 전문가!!", 4
+                    "고등학교 1학년", "역시 전문가!!", 4
             );
             createReview(
                     ReferenceType.ACADEMY, academies.get(3).getId(), normalMembers.get(4),
-                    "고등학교 2학년", "이제 비행기 없어도 해외여행 쌉가능", 1
+                    "고등학교 2학년", "이제 비행기 없어도 해외여행 가능", 1
             );
             createReview(
                     ReferenceType.ACADEMY, academies.get(4).getId(), tutorMembers.get(0),
@@ -277,22 +277,22 @@ public class DbInit {
 
         /** 학원 소식 데이터 */
         public void insertAcademyNews() {
-            createAcademyNews(academies.get(0), "ㅎㅇ 나 철수", "<p>우리학원 짱이다.</p>");
-            createAcademyNews(academies.get(0), "액션가면 같이 보실분", "<p>우리집으로 오셈</p>");
-            createAcademyNews(academies.get(0), "수학 공부 합시다", "<p>ㄱㄱ</p>");
-            createAcademyNews(academies.get(0), "떡잎마을 방범대 모집", "<p>빨리 안오면 마감합니다.</p>");
-            createAcademyNews(academies.get(1), "축지법 영상", "<p>슈슈슈슉</p>");
-            createAcademyNews(academies.get(1), "축지법 야외 실습", "<p>님만오면ㄱ</p>");
+            createAcademyNews(academies.get(0), "안녕하세요. 원장 철수입니다.", "<p>우리학원 좋습니다.</p>");
+            createAcademyNews(academies.get(0), "수학은 이렇게 하는겁니다.", "<p>가르쳐드리죠.</p>");
+            createAcademyNews(academies.get(0), "수학 공부 합시다", "<p>ㅎㅎ</p>");
+            createAcademyNews(academies.get(0), "특강 모집", "<p>빨리 안오면 마감합니다.</p>");
+            createAcademyNews(academies.get(1), "축지법", "<p>슈슈슈슉</p>");
+            createAcademyNews(academies.get(1), "야외 현장 실습", "<p>내용</p>");
             createAcademyNews(academies.get(2), "오늘도 부두술로...", "<p>오늘도 한 명 보냈습니다.</p>");
-            createAcademyNews(academies.get(2), "직장 상사 맘에 드세요?", "<p>여름맞이 특강 직장 상사 없애는 법</p>");
-            createAcademyNews(academies.get(3), "날아다니는 원장", "<p>슈우우웅</p>");
+            createAcademyNews(academies.get(2), "간절한 것이 있나요?", "<p>간절함을 가집시다.</p>");
+            createAcademyNews(academies.get(3), "날아다니는 법", "<p>슈우우웅</p>");
             createAcademyNews(academies.get(3), "날다람쥐 비행술", "<p>슈우우웅</p>");
             createAcademyNews(academies.get(3), "로켓 비행술", "<p>슈우우웅</p>");
             createAcademyNews(academies.get(4), "hello.", "<p>안녕.</p>");
             createAcademyNews(academies.get(4), "Nice to meet you.", "<p>만나서 반갑습니다.</p>");
-            createAcademyNews(academies.get(5), "제 1회 원내 작품대회 결과", "<p>강남 일대를 초토화시킨 김찬진 학생</p>");
+            createAcademyNews(academies.get(5), "제 1회 원내 작품대회 결과", "<p>김찬진 학생</p>");
             createAcademyNews(academies.get(5), "제 17회 '폭발은 예술이다.' 경연대회", "<p>펑펑</p>");
-            createAcademyNews(academies.get(5), "오늘의 폭파왕", "<p>김찬진 학생</p>");
+            createAcademyNews(academies.get(5), "오늘의 우수 원생", "<p>김동원 학생</p>");
         }
 
         /** ==================================================================================================== */
