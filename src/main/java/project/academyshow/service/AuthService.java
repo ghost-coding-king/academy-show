@@ -128,6 +128,9 @@ public class AuthService {
         AuthToken accessToken = tokenProvider.convertToAuthToken(accessTokenString);
 
         Claims claims = accessToken.getTokenClaims();
+        if (claims == null)
+            return null;
+
         String username = claims.getSubject();
 
         String refreshTokenString = CookieUtil.getCookie(request, REFRESH_TOKEN)
