@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 import project.academyshow.controller.request.AcademySignUpRequest;
@@ -15,8 +16,8 @@ import project.academyshow.controller.response.ApiResponse;
 import project.academyshow.entity.Member;
 import project.academyshow.entity.RoleType;
 import project.academyshow.repository.MemberRepository;
+import project.academyshow.security.entity.CustomUserDetails;
 import project.academyshow.security.token.AuthToken;
-import project.academyshow.security.token.AuthTokenProvider;
 import project.academyshow.service.AuthService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -92,6 +93,11 @@ public class AuthController {
         }
     }
 
+    @PostMapping("/user-info")
+    public ApiResponse<?> tokenUserInfo(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        return ApiResponse.success(new LoginInfo(userDetails.getMember()));
+    }
+
     @Data
     private static class LoginInfo {
         private String name;
@@ -99,23 +105,26 @@ public class AuthController {
         private RoleType role;
         private Long myAcademyId;
         private Long myTutorId;
+
+        public LoginInfo(Member member) {
+            name = member.getName();
+            profile = member.getProfile();
+            role = member.getRole();
+
+            if (role == RoleType.ROLE_ACADEMY)
+                myAcademyId = member.getAcademy().getId();
+            else if (role == RoleType.ROLE_TUTOR)
+                myTutorId = member.getTutorInfo().getId();
+        }
     }
 
     /** Access Token 발급 후 username, role 정보 */
     private LoginInfo loginInfo(AuthToken accessToken) {
-        LoginInfo loginInfo = new LoginInfo();
         Claims claims = accessToken.getTokenClaims();
         String username = claims.getSubject();
         Optional<Member> member = memberRepository.findByUsername(username);
         member.orElseThrow(() -> new UsernameNotFoundException("Username not found."));
 
-        loginInfo.setName(member.get().getName());
-        loginInfo.setProfile(member.get().getProfile());
-        loginInfo.setRole(RoleType.valueOf(claims.get(AuthTokenProvider.AUTHORITIES_KEY).toString()));
-        if (loginInfo.getRole() == RoleType.ROLE_ACADEMY)
-            loginInfo.setMyAcademyId(member.get().getAcademy().getId());
-        else if (loginInfo.getRole() == RoleType.ROLE_TUTOR)
-            loginInfo.setMyTutorId(member.get().getTutorInfo().getId());
-        return loginInfo;
+        return new LoginInfo(member.get());
     }
 }
