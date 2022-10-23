@@ -20,6 +20,45 @@ spring:
         format_sql: true
         default_batch_fetch_size: 100
 
+  security:
+    oauth2.client:
+      registration:
+        naver:
+          clientId: '{네이버 client-id}'
+          clientSecret: '{네이버 client-secret}'
+          clientAuthenticationMethod: post
+          authorizationGrantType: authorization_code
+          redirectUri: "{baseUrl}/{action}/oauth2/code/{registrationId}"
+          scope:
+            - nickname
+            - email
+            - profile_image
+          clientName: Naver
+        kakao:
+          clientId: '{카카오 client-id}'
+          clientSecret: '{카카오 client-secret}'
+          clientAuthenticationMethod: post
+          authorizationGrantType: authorization_code
+          redirectUri: "{baseUrl}/{action}/oauth2/code/{registrationId}"
+          scope:
+            - profile_nickname
+            - profile_image
+            - account_email
+          clientName: Kakao
+
+      # Provider 설정
+      provider:
+        naver:
+          authorizationUri: https://nid.naver.com/oauth2.0/authorize
+          tokenUri: https://nid.naver.com/oauth2.0/token
+          userInfoUri: https://openapi.naver.com/v1/nid/me
+          userNameAttribute: response
+        kakao:
+          authorizationUri: https://kauth.kakao.com/oauth/authorize
+          tokenUri: https://kauth.kakao.com/oauth/token
+          userInfoUri: https://kapi.kakao.com/v2/user/me
+          userNameAttribute: id
+
   devtools:
     livereload:
       enabled: true
@@ -45,6 +84,8 @@ cors:
 app:
   filePath: '/Users/woo/upload-test'
   domainUrl: 'http://localhost:8081'
+  oAuth2AuthorizedRedirectUris:
+    - http://localhost:8080/oauth/redirect
 
 # jwt
 jwt:
