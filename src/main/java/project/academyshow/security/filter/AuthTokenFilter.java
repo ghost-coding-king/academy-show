@@ -57,7 +57,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
                 .collect(Collectors.toList());
 
                 /* CustomUserDetails 생성하여 Authentication 등록 */
-                CustomUserDetails userDetails = new CustomUserDetails(member.get());
+                CustomUserDetails userDetails = CustomUserDetails.builder().member(member.get()).build();
                 Authentication authentication = new UsernamePasswordAuthenticationToken(
                         userDetails, "", authorities
                 );
