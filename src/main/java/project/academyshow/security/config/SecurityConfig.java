@@ -17,6 +17,10 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import project.academyshow.security.filter.AuthTokenFilter;
+import project.academyshow.security.oauth.service.CustomOAuth2UserService;
+import project.academyshow.security.oauth.handler.OAuth2AuthenticationFailureHandler;
+import project.academyshow.security.oauth.handler.OAuth2AuthenticationSuccessHandler;
+import project.academyshow.security.oauth.repository.OAuth2AuthorizationRequestBasedOnCookieRepository;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
@@ -30,6 +34,11 @@ public class SecurityConfig {
     private final CorsProperties corsProperties;
     /** Jwt 인증 필터 */
     private final AuthTokenFilter authTokenFilter;
+
+    private final OAuth2AuthorizationRequestBasedOnCookieRepository oAuth2AuthorizationRequestBasedOnCookieRepository;
+    private final CustomOAuth2UserService customOAuth2UserService;
+    private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
+    private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
 
     /** Spring Security Filter Chain 관련 설정 */
     @Bean
@@ -65,6 +74,7 @@ public class SecurityConfig {
                     /* URI 기반 인증/인가 설정 */
                     .authorizeRequests()
                     .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
+                    .antMatchers("/auth/user-info").authenticated()
                     .antMatchers("/auth/**").permitAll()
                     .antMatchers("/api/subjects").permitAll()
                     .antMatchers("/api/academies").permitAll()
@@ -73,7 +83,22 @@ public class SecurityConfig {
                     .antMatchers(HttpMethod.GET, "/api/posts/**").permitAll()
                     .antMatchers(HttpMethod.GET, "/api/tutors/**").permitAll()
                     .antMatchers(HttpMethod.GET, "/api/tutor/**").permitAll()
-                    .anyRequest().authenticated();
+                    .anyRequest().authenticated()
+                .and()
+                    /* OAuth2 설정 */
+                    .oauth2Login()
+                    .authorizationEndpoint()
+                    .baseUri("/oauth2/authorization")
+                    .authorizationRequestRepository(oAuth2AuthorizationRequestBasedOnCookieRepository)
+                .and()
+                    .redirectionEndpoint()
+                    .baseUri("/*/oauth2/code/*")
+                .and()
+                    .userInfoEndpoint()
+                    .userService(customOAuth2UserService)
+                .and()
+                    .successHandler(oAuth2AuthenticationSuccessHandler)
+                    .failureHandler(oAuth2AuthenticationFailureHandler);
 
         /* jwtTokenFilter 등록 */
         http.addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class);
