@@ -4,10 +4,10 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
+import project.academyshow.security.config.JwtConfig;
 
 import java.security.Key;
 import java.util.Date;
@@ -15,32 +15,26 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Component
-public class AuthTokenProvider {
+public class AuthTokenProvider implements TokenProvider {
 
+
+    private final JwtConfig jwtConfig;
     private final Key key;
     private final Key refreshTokenKey;
-    public final long tokenValidityInMilliseconds;
-    public final long refreshTokenValidityInMilliseconds;
-    public static final String AUTHORITIES_KEY = "role";
-    public static final String TOKEN_PREFIX = "Bearer ";
 
-    public AuthTokenProvider(@Value("${jwt.secret}") String secret,
-                             @Value("${jwt.refresh-token-secret}") String refreshTokenSecret,
-                             @Value("${jwt.token-validity-in-seconds}") long validityInSeconds,
-                             @Value("${jwt.refresh-token-validity-in-seconds}") long refreshTokenValidityInSeconds) {
-        this.key = Keys.hmacShaKeyFor(secret.getBytes());
-        this.refreshTokenKey = Keys.hmacShaKeyFor(refreshTokenSecret.getBytes());
-        this.tokenValidityInMilliseconds = validityInSeconds * 1000;
-        this.refreshTokenValidityInMilliseconds = refreshTokenValidityInSeconds * 1000;
+    public AuthTokenProvider(JwtConfig jwtConfig) {
+        this.jwtConfig = jwtConfig;
+        this.key = Keys.hmacShaKeyFor(jwtConfig.getSecret().getBytes());
+        this.refreshTokenKey = Keys.hmacShaKeyFor(jwtConfig.getRefreshTokenSecret().getBytes());
     }
 
     /** Authentication 정보로 Access Token 생성 */
-    public AuthToken generateToken(Authentication authentication) {
+    public Token generateToken(Authentication authentication) {
         return new AuthToken(generateTokenString(authentication), key);
     }
 
     /** Refresh Token 생성 */
-    public AuthToken generateRefreshToken(String username) {
+    public Token generateRefreshToken(String username) {
         return new AuthToken(generateRefreshTokenString(username), refreshTokenKey);
     }
 
@@ -52,7 +46,7 @@ public class AuthTokenProvider {
                 .collect(Collectors.joining(","));
 
         long now = new Date().getTime();
-        Date expiryDate = new Date(now + tokenValidityInMilliseconds);
+        Date expiryDate = new Date(now + jwtConfig.getTokenValidityInSeconds());
 
         return Jwts.builder()
                 .setSubject(authentication.getName())
@@ -65,7 +59,7 @@ public class AuthTokenProvider {
     /** Refresh Token string 생성 */
     private String generateRefreshTokenString(String subject) {
         long now = new Date().getTime();
-        Date expiryDate = new Date(now + refreshTokenValidityInMilliseconds);
+        Date expiryDate = new Date(now + jwtConfig.getRefreshTokenValidityInSeconds());
 
         return Jwts.builder()
                 .setSubject(subject)
@@ -75,11 +69,11 @@ public class AuthTokenProvider {
     }
 
     /** token string 을 AuthToken 객체로 변환 */
-    public AuthToken convertToAuthToken(String token) {
+    public Token convertToAuthToken(String token) {
         return new AuthToken(token, this.key);
     }
 
-    public AuthToken convertToRefreshAuthToken(String token) {
+    public Token convertToRefreshAuthToken(String token) {
         return new AuthToken(token, this.refreshTokenKey);
     }
 }

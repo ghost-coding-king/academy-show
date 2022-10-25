@@ -7,7 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.security.Key;
 
 @Slf4j
-public class AuthToken {
+public class AuthToken implements Token {
 
     @Getter
     private final String token;

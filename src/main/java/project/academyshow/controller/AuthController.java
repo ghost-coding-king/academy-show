@@ -17,7 +17,7 @@ import project.academyshow.entity.Member;
 import project.academyshow.entity.RoleType;
 import project.academyshow.repository.MemberRepository;
 import project.academyshow.security.entity.CustomUserDetails;
-import project.academyshow.security.token.AuthToken;
+import project.academyshow.security.token.Token;
 import project.academyshow.service.AuthService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -69,7 +69,7 @@ public class AuthController {
     public ResponseEntity<?> login(HttpServletRequest request,
                                    HttpServletResponse response,
                                    @RequestBody LoginRequest loginRequest) {
-        AuthToken accessToken = authService.login(request, response, loginRequest);
+        Token accessToken = authService.login(request, response, loginRequest);
         if (accessToken == null)
             return ResponseEntity.ok(ApiResponse.AUTHENTICATE_FAILED_RESPONSE);
         else {
@@ -83,7 +83,7 @@ public class AuthController {
     @GetMapping("/refresh")
     public ResponseEntity<?> refreshToken(HttpServletRequest request,
                                           HttpServletResponse response) {
-        AuthToken accessToken = authService.refresh(request, response);
+        Token accessToken = authService.refresh(request, response);
         if (accessToken == null)
             return ResponseEntity.ok(ApiResponse.AUTHENTICATE_FAILED_RESPONSE);
         else {
@@ -119,7 +119,7 @@ public class AuthController {
     }
 
     /** Access Token 발급 후 username, role 정보 */
-    private LoginInfo loginInfo(AuthToken accessToken) {
+    private LoginInfo loginInfo(Token accessToken) {
         Claims claims = accessToken.getTokenClaims();
         String username = claims.getSubject();
         Optional<Member> member = memberRepository.findByUsername(username);

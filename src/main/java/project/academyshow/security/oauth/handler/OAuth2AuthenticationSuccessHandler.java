@@ -11,14 +11,14 @@ import project.academyshow.config.AppProperties;
 import project.academyshow.entity.ProviderType;
 import project.academyshow.entity.RefreshToken;
 import project.academyshow.repository.RefreshTokenRepository;
+import project.academyshow.security.config.JwtConfig;
 import project.academyshow.security.oauth.entity.OAuth2UserInfo;
 import project.academyshow.security.oauth.entity.OAuth2UserInfoFactory;
 import project.academyshow.security.oauth.repository.OAuth2AuthorizationRequestBasedOnCookieRepository;
-import project.academyshow.security.token.AuthToken;
-import project.academyshow.security.token.AuthTokenProvider;
+import project.academyshow.security.token.Token;
+import project.academyshow.security.token.TokenProvider;
 import project.academyshow.util.CookieUtil;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -33,8 +33,9 @@ import static project.academyshow.security.oauth.repository.OAuth2AuthorizationR
 @Component
 @RequiredArgsConstructor
 public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
-    private final AuthTokenProvider tokenProvider;
+    private final TokenProvider tokenProvider;
     private final AppProperties appProperties;
+    private final JwtConfig jwtConfig;
     private final OAuth2AuthorizationRequestBasedOnCookieRepository authorizationRequestRepository;
     private final RefreshTokenRepository refreshTokenRepository;
 
@@ -48,7 +49,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         }
 
         /* access token 생성 */
-        AuthToken accessToken = jwtProcess(request, response, authentication);
+        Token accessToken = jwtProcess(request, response, authentication);
 
         /* frontend redirect url 로 이동, 토큰 파라미터로 전달 */
         String targetUrl = determineTargetUrl(request, response, authentication);
@@ -73,15 +74,15 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     }
 
     /* access token, refresh token 에 관한 처리 */
-    private AuthToken jwtProcess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
+    private Token jwtProcess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
         OAuth2AuthenticationToken oauth2Token = (OAuth2AuthenticationToken) authentication;
 
         ProviderType providerType = ProviderType.valueOf(oauth2Token.getAuthorizedClientRegistrationId().toUpperCase());
         OidcUser user = ((OidcUser) authentication.getPrincipal());
         OAuth2UserInfo oAuth2User = OAuth2UserInfoFactory.getOAuth2UserInfo(providerType, user.getAttributes());
 
-        AuthToken accessToken = tokenProvider.generateToken(authentication);
-        AuthToken refreshToken = tokenProvider.generateRefreshToken(oAuth2User.getId());
+        Token accessToken = tokenProvider.generateToken(authentication);
+        Token refreshToken = tokenProvider.generateRefreshToken(oAuth2User.getId());
 
         Optional<RefreshToken> userRefreshToken = refreshTokenRepository.findByUsername(oAuth2User.getId());
         if (userRefreshToken.isPresent()) {
@@ -96,7 +97,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         }
 
         /* Refresh Token 쿠키에 등록 */
-        int cookieMaxAge = (int) tokenProvider.refreshTokenValidityInMilliseconds / 60;
+        int cookieMaxAge = (int) (jwtConfig.getRefreshTokenValidityInSeconds() / 60);
         CookieUtil.deleteCookie(request, response, REFRESH_TOKEN);
         CookieUtil.addCookie(response, REFRESH_TOKEN, refreshToken.getToken(), cookieMaxAge);
 
