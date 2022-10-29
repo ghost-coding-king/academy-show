@@ -14,8 +14,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import project.academyshow.entity.Member;
 import project.academyshow.repository.MemberRepository;
 import project.academyshow.security.entity.CustomUserDetails;
-import project.academyshow.security.token.AuthToken;
-import project.academyshow.security.token.AuthTokenProvider;
+import project.academyshow.security.token.Token;
+import project.academyshow.security.token.TokenProvider;
 import project.academyshow.util.HeaderUtil;
 
 import javax.servlet.FilterChain;
@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class AuthTokenFilter extends OncePerRequestFilter {
 
-    private final AuthTokenProvider tokenProvider;
+    private final TokenProvider tokenProvider;
     private final MemberRepository memberRepository;
 
     @Override
@@ -44,7 +44,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
         }
         else {
             /* token string -> AuthToken object */
-            AuthToken authToken = tokenProvider.convertToAuthToken(token);
+            Token authToken = tokenProvider.convertToAuthToken(token);
 
             if (authToken.isValid()) {
                 Claims claims = authToken.getTokenClaims();
@@ -52,7 +52,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
                 member.orElseThrow(() -> new UsernameNotFoundException("Username not found."));
 
                 List<SimpleGrantedAuthority> authorities =
-                Arrays.stream(claims.get(AuthTokenProvider.AUTHORITIES_KEY).toString().split(","))
+                Arrays.stream(claims.get(TokenProvider.AUTHORITIES_KEY).toString().split(","))
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
 

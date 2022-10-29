@@ -21,8 +21,9 @@ import project.academyshow.repository.AcademyRepository;
 import project.academyshow.repository.MemberRepository;
 import project.academyshow.repository.RefreshTokenRepository;
 import project.academyshow.repository.TutorInfoRepository;
-import project.academyshow.security.token.AuthToken;
-import project.academyshow.security.token.AuthTokenProvider;
+import project.academyshow.security.config.JwtConfig;
+import project.academyshow.security.token.Token;
+import project.academyshow.security.token.TokenProvider;
 import project.academyshow.util.CookieUtil;
 import project.academyshow.util.HeaderUtil;
 
@@ -41,7 +42,8 @@ public class AuthService {
 
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
-    private final AuthTokenProvider tokenProvider;
+    private final TokenProvider tokenProvider;
+    private final JwtConfig jwtConfig;
     private final MemberRepository memberRepository;
     private final RefreshTokenRepository refreshTokenRepository;
     private final AcademyRepository academyRepository;
@@ -77,7 +79,7 @@ public class AuthService {
 
     /** 로그인
      * @return AuthToken */
-    public AuthToken login(HttpServletRequest request,
+    public Token login(HttpServletRequest request,
                            HttpServletResponse response,
                            LoginRequest loginRequest) {
         String username = loginRequest.getUsername();
@@ -94,8 +96,8 @@ public class AuthService {
 
             /* AccessToken, Refresh Token 발급 */
             /* 로그인 시, Refresh Token 도 재발급함 */
-            AuthToken accessToken = tokenProvider.generateToken(authenticate);
-            AuthToken newRefreshToken = tokenProvider.generateRefreshToken(username);
+            Token accessToken = tokenProvider.generateToken(authenticate);
+            Token newRefreshToken = tokenProvider.generateRefreshToken(username);
             Optional<RefreshToken> oldRefreshToken = refreshTokenRepository.findByUsername(username);
 
             if (oldRefreshToken.isPresent()) {
@@ -109,7 +111,7 @@ public class AuthService {
             }
 
             /* Refresh Token 쿠키에 등록 */
-            int cookieMaxAge = (int) tokenProvider.refreshTokenValidityInMilliseconds / 60;
+            int cookieMaxAge = (int) (jwtConfig.getRefreshTokenValidityInSeconds() / 60);
             CookieUtil.deleteCookie(request, response, REFRESH_TOKEN);
             CookieUtil.addCookie(response, REFRESH_TOKEN, newRefreshToken.getToken(), cookieMaxAge);
 
@@ -122,10 +124,10 @@ public class AuthService {
 
     /** Refresh Token 으로 Access Token 재발급
      * Refresh Token 의 만료가 3일 이내이면 Refresh Token 도 재발급 */
-    public AuthToken refresh(HttpServletRequest request, HttpServletResponse response) {
+    public Token refresh(HttpServletRequest request, HttpServletResponse response) {
         /* 요청에 담긴 Access Token, Refresh Token 획득 및 검증 */
         String accessTokenString = HeaderUtil.resolveToken(request);
-        AuthToken accessToken = tokenProvider.convertToAuthToken(accessTokenString);
+        Token accessToken = tokenProvider.convertToAuthToken(accessTokenString);
 
         Claims claims = accessToken.getTokenClaims();
         if (claims == null)
@@ -146,7 +148,7 @@ public class AuthService {
         if (oldRefreshToken.isEmpty()) return null;
 
         /* 유효한 Refresh Token 인지 확인 */
-        AuthToken refreshToken = tokenProvider.convertToRefreshAuthToken(refreshTokenString);
+        Token refreshToken = tokenProvider.convertToRefreshAuthToken(refreshTokenString);
         if (!refreshToken.isValid()) return null;
 
         /* Refresh Token 의 유효기간이 3일 이내로 남은 경우 재발급 */
@@ -154,10 +156,10 @@ public class AuthService {
         long validTime = refreshToken.getTokenClaims().getExpiration().getTime() - now.getTime();
 
         if (validTime <= THREE_DAYS_IN_MILLISECONDS) {
-            AuthToken newRefreshToken = tokenProvider.generateRefreshToken(username);
+            Token newRefreshToken = tokenProvider.generateRefreshToken(username);
             oldRefreshToken.get().setToken(newRefreshToken.getToken());
 
-            int cookieMaxAge = (int) tokenProvider.refreshTokenValidityInMilliseconds / 60;
+            int cookieMaxAge = (int) (jwtConfig.getRefreshTokenValidityInSeconds() / 60);
             CookieUtil.deleteCookie(request, response, REFRESH_TOKEN);
             CookieUtil.addCookie(response, REFRESH_TOKEN, newRefreshToken.getToken(), cookieMaxAge);
         }

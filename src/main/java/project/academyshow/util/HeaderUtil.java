@@ -2,7 +2,7 @@ package project.academyshow.util;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.util.StringUtils;
-import project.academyshow.security.token.AuthTokenProvider;
+import project.academyshow.security.token.TokenProvider;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -12,8 +12,8 @@ public class HeaderUtil {
     public static String resolveToken(HttpServletRequest request) {
         String bearerToken = request.getHeader(HttpHeaders.AUTHORIZATION);
 
-        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(AuthTokenProvider.TOKEN_PREFIX)) {
-            return bearerToken.substring(AuthTokenProvider.TOKEN_PREFIX.length());
+        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(TokenProvider.TOKEN_PREFIX)) {
+            return bearerToken.substring(TokenProvider.TOKEN_PREFIX.length());
         }
 
         return null;
