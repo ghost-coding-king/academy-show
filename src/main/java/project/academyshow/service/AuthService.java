@@ -95,25 +95,9 @@ public class AuthService {
             );
 
             /* AccessToken, Refresh Token 발급 */
-            /* 로그인 시, Refresh Token 도 재발급함 */
             Token accessToken = tokenProvider.generateToken(authenticate);
-            Token newRefreshToken = tokenProvider.generateRefreshToken(username);
-            Optional<RefreshToken> oldRefreshToken = refreshTokenRepository.findByUsername(username);
-
-            if (oldRefreshToken.isPresent()) {
-                oldRefreshToken.get().setToken(newRefreshToken.getToken());
-            }
-            else {
-                refreshTokenRepository.save(
-                        RefreshToken.builder()
-                        .username(username)
-                        .token(newRefreshToken.getToken()).build());
-            }
-
-            /* Refresh Token 쿠키에 등록 */
-            int cookieMaxAge = (int) (jwtConfig.getRefreshTokenValidityInSeconds() / 60);
-            CookieUtil.deleteCookie(request, response, REFRESH_TOKEN);
-            CookieUtil.addCookie(response, REFRESH_TOKEN, newRefreshToken.getToken(), cookieMaxAge);
+            /* 로그인 시, Refresh Token 도 재발급 */
+            updateRefreshToken(request, response, username);
 
             return accessToken;
         } catch (Exception exception) {
@@ -156,12 +140,7 @@ public class AuthService {
         long validTime = refreshToken.getTokenClaims().getExpiration().getTime() - now.getTime();
 
         if (validTime <= THREE_DAYS_IN_MILLISECONDS) {
-            Token newRefreshToken = tokenProvider.generateRefreshToken(username);
-            oldRefreshToken.get().setToken(newRefreshToken.getToken());
-
-            int cookieMaxAge = (int) (jwtConfig.getRefreshTokenValidityInSeconds() / 60);
-            CookieUtil.deleteCookie(request, response, REFRESH_TOKEN);
-            CookieUtil.addCookie(response, REFRESH_TOKEN, newRefreshToken.getToken(), cookieMaxAge);
+            updateRefreshToken(request, response, username);
         }
 
         /* Access Token 발급 */
@@ -174,5 +153,26 @@ public class AuthService {
         Authentication authentication = new UsernamePasswordAuthenticationToken(principal, "", authorities);
 
         return tokenProvider.generateToken(authentication);
+    }
+
+    public void updateRefreshToken(HttpServletRequest request, HttpServletResponse response, String username) {
+        Token newRefreshToken = tokenProvider.generateRefreshToken(username);
+        Optional<RefreshToken> oldRefreshToken = refreshTokenRepository.findByUsername(username);
+
+        if (oldRefreshToken.isPresent()) {
+            oldRefreshToken.get().setToken(newRefreshToken.getToken());
+        }
+        else {
+            refreshTokenRepository.save(
+                    RefreshToken.builder()
+                            .username(username)
+                            .token(newRefreshToken.getToken())
+                            .build());
+        }
+
+        /* Refresh Token 쿠키에 등록 */
+        int cookieMaxAge = (int) (jwtConfig.getRefreshTokenValidityInSeconds() / 60);
+        CookieUtil.deleteCookie(request, response, REFRESH_TOKEN);
+        CookieUtil.addCookie(response, REFRESH_TOKEN, newRefreshToken.getToken(), cookieMaxAge);
     }
 }

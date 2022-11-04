@@ -9,14 +9,12 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
 import project.academyshow.config.AppProperties;
 import project.academyshow.entity.ProviderType;
-import project.academyshow.entity.RefreshToken;
-import project.academyshow.repository.RefreshTokenRepository;
-import project.academyshow.security.config.JwtConfig;
 import project.academyshow.security.oauth.entity.OAuth2UserInfo;
 import project.academyshow.security.oauth.entity.OAuth2UserInfoFactory;
 import project.academyshow.security.oauth.repository.OAuth2AuthorizationRequestBasedOnCookieRepository;
 import project.academyshow.security.token.Token;
 import project.academyshow.security.token.TokenProvider;
+import project.academyshow.service.AuthService;
 import project.academyshow.util.CookieUtil;
 
 import javax.servlet.http.Cookie;
@@ -28,16 +26,14 @@ import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
 import static project.academyshow.security.oauth.repository.OAuth2AuthorizationRequestBasedOnCookieRepository.REDIRECT_URI_PARAM_COOKIE_NAME;
-import static project.academyshow.security.oauth.repository.OAuth2AuthorizationRequestBasedOnCookieRepository.REFRESH_TOKEN;
 
 @Component
 @RequiredArgsConstructor
 public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
+    private final AuthService authService;
     private final TokenProvider tokenProvider;
     private final AppProperties appProperties;
-    private final JwtConfig jwtConfig;
     private final OAuth2AuthorizationRequestBasedOnCookieRepository authorizationRequestRepository;
-    private final RefreshTokenRepository refreshTokenRepository;
 
     @Override
     public void onAuthenticationSuccess(
@@ -82,24 +78,9 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         OAuth2UserInfo oAuth2User = OAuth2UserInfoFactory.getOAuth2UserInfo(providerType, user.getAttributes());
 
         Token accessToken = tokenProvider.generateToken(authentication);
-        Token refreshToken = tokenProvider.generateRefreshToken(oAuth2User.getId());
 
-        Optional<RefreshToken> userRefreshToken = refreshTokenRepository.findByUsername(oAuth2User.getId());
-        if (userRefreshToken.isPresent()) {
-            userRefreshToken.get().setToken(refreshToken.getToken());
-        } else {
-            refreshTokenRepository.saveAndFlush(
-                    RefreshToken.builder()
-                            .username(oAuth2User.getId())
-                            .token(refreshToken.getToken())
-                            .build()
-            );
-        }
-
-        /* Refresh Token 쿠키에 등록 */
-        int cookieMaxAge = (int) (jwtConfig.getRefreshTokenValidityInSeconds() / 60);
-        CookieUtil.deleteCookie(request, response, REFRESH_TOKEN);
-        CookieUtil.addCookie(response, REFRESH_TOKEN, refreshToken.getToken(), cookieMaxAge);
+        /* Refresh Token 처리 */
+        authService.updateRefreshToken(request, response, oAuth2User.getId());
 
         return accessToken;
     }
