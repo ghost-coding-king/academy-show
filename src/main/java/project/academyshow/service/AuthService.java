@@ -21,7 +21,6 @@ import project.academyshow.repository.AcademyRepository;
 import project.academyshow.repository.MemberRepository;
 import project.academyshow.repository.RefreshTokenRepository;
 import project.academyshow.repository.TutorInfoRepository;
-import project.academyshow.security.config.JwtConfig;
 import project.academyshow.security.token.Token;
 import project.academyshow.security.token.TokenProvider;
 import project.academyshow.util.CookieUtil;
@@ -34,22 +33,23 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import static org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames.REFRESH_TOKEN;
+
 @Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class AuthService {
 
+    private final TokenService tokenService;
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
-    private final JwtConfig jwtConfig;
     private final MemberRepository memberRepository;
     private final RefreshTokenRepository refreshTokenRepository;
     private final AcademyRepository academyRepository;
     private final TutorInfoRepository tutorInfoRepository;
     private final static long THREE_DAYS_IN_MILLISECONDS = 259200000;
-    private final static String REFRESH_TOKEN = "refresh_token";
 
     /** 일반 회원가입 */
     public void userSignUp(UserSignUpRequest userInfo) {
@@ -97,7 +97,7 @@ public class AuthService {
             /* AccessToken, Refresh Token 발급 */
             Token accessToken = tokenProvider.generateToken(authenticate);
             /* 로그인 시, Refresh Token 도 재발급 */
-            updateRefreshToken(request, response, username);
+            tokenService.updateRefreshToken(request, response, username);
 
             return accessToken;
         } catch (Exception exception) {
@@ -140,7 +140,7 @@ public class AuthService {
         long validTime = refreshToken.getTokenClaims().getExpiration().getTime() - now.getTime();
 
         if (validTime <= THREE_DAYS_IN_MILLISECONDS) {
-            updateRefreshToken(request, response, username);
+            tokenService.updateRefreshToken(request, response, username);
         }
 
         /* Access Token 발급 */
@@ -153,26 +153,5 @@ public class AuthService {
         Authentication authentication = new UsernamePasswordAuthenticationToken(principal, "", authorities);
 
         return tokenProvider.generateToken(authentication);
-    }
-
-    public void updateRefreshToken(HttpServletRequest request, HttpServletResponse response, String username) {
-        Token newRefreshToken = tokenProvider.generateRefreshToken(username);
-        Optional<RefreshToken> oldRefreshToken = refreshTokenRepository.findByUsername(username);
-
-        if (oldRefreshToken.isPresent()) {
-            oldRefreshToken.get().setToken(newRefreshToken.getToken());
-        }
-        else {
-            refreshTokenRepository.save(
-                    RefreshToken.builder()
-                            .username(username)
-                            .token(newRefreshToken.getToken())
-                            .build());
-        }
-
-        /* Refresh Token 쿠키에 등록 */
-        int cookieMaxAge = (int) (jwtConfig.getRefreshTokenValidityInSeconds() / 60);
-        CookieUtil.deleteCookie(request, response, REFRESH_TOKEN);
-        CookieUtil.addCookie(response, REFRESH_TOKEN, newRefreshToken.getToken(), cookieMaxAge);
     }
 }

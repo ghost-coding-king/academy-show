@@ -14,7 +14,7 @@ import project.academyshow.security.oauth.entity.OAuth2UserInfoFactory;
 import project.academyshow.security.oauth.repository.OAuth2AuthorizationRequestBasedOnCookieRepository;
 import project.academyshow.security.token.Token;
 import project.academyshow.security.token.TokenProvider;
-import project.academyshow.service.AuthService;
+import project.academyshow.service.TokenService;
 import project.academyshow.util.CookieUtil;
 
 import javax.servlet.http.Cookie;
@@ -30,7 +30,7 @@ import static project.academyshow.security.oauth.repository.OAuth2AuthorizationR
 @Component
 @RequiredArgsConstructor
 public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
-    private final AuthService authService;
+    private final TokenService tokenService;
     private final TokenProvider tokenProvider;
     private final AppProperties appProperties;
     private final OAuth2AuthorizationRequestBasedOnCookieRepository authorizationRequestRepository;
@@ -80,7 +80,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         Token accessToken = tokenProvider.generateToken(authentication);
 
         /* Refresh Token 처리 */
-        authService.updateRefreshToken(request, response, oAuth2User.getId());
+        tokenService.updateRefreshToken(request, response, oAuth2User.getId());
 
         return accessToken;
     }
