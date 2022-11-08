@@ -26,6 +26,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         Member member = byUsername.get();
         return CustomUserDetails.builder()
                 .username(member.getUsername())
+                .password(member.getPassword())
                 .role(member.getRole())
                 .providerType(member.getProviderType())
                 .build();

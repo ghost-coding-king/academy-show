@@ -20,9 +20,9 @@ public class PostController {
     private final PostService postService;
 
     @PostMapping("/posts")
-    public ApiResponse<?> create(@AuthenticationPrincipal CustomUserDetails user,
+    public ApiResponse<?> create(@AuthenticationPrincipal CustomUserDetails userDetails,
                                 @RequestBody PostRequest postRequest) {
-        Post newsPost = postService.save(postRequest, user.getMember());
+        Post newsPost = postService.save(postRequest, userDetails);
         return ApiResponse.success(newsPost.getId());
     }
 

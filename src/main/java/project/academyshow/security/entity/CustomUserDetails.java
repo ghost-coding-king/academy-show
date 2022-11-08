@@ -23,6 +23,7 @@ import java.util.Map;
 public class CustomUserDetails implements OAuth2User, UserDetails, OidcUser {
 
     private String username;
+    private String password;
     private RoleType role;
     private ProviderType providerType;
     private Map<String, Object> attributes;
@@ -39,7 +40,7 @@ public class CustomUserDetails implements OAuth2User, UserDetails, OidcUser {
 
     @Override
     public String getPassword() {
-        return null;
+        return password;
     }
 
     @Override
