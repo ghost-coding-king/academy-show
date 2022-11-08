@@ -2,9 +2,7 @@ package project.academyshow.entity;
 
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 @Builder
@@ -19,4 +17,7 @@ public class RefreshToken {
     private String token;
 
     private String username;
+
+    @Enumerated(EnumType.STRING)
+    private ProviderType providerType;
 }

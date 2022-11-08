@@ -97,7 +97,7 @@ public class AuthService {
             /* AccessToken, Refresh Token 발급 */
             Token accessToken = tokenProvider.generateToken(authenticate);
             /* 로그인 시, Refresh Token 도 재발급 */
-            tokenService.updateRefreshToken(request, response, username);
+            tokenService.updateRefreshToken(request, response, username, ProviderType.LOCAL);
 
             return accessToken;
         } catch (Exception exception) {
@@ -118,6 +118,7 @@ public class AuthService {
             return null;
 
         String username = claims.getSubject();
+        ProviderType providerType = ProviderType.valueOf(claims.get(TokenProvider.PROVIDER_TYPE).toString());
 
         String refreshTokenString = CookieUtil.getCookie(request, REFRESH_TOKEN)
                 .map(Cookie::getValue)
@@ -140,7 +141,7 @@ public class AuthService {
         long validTime = refreshToken.getTokenClaims().getExpiration().getTime() - now.getTime();
 
         if (validTime <= THREE_DAYS_IN_MILLISECONDS) {
-            tokenService.updateRefreshToken(request, response, username);
+            tokenService.updateRefreshToken(request, response, username, providerType);
         }
 
         /* Access Token 발급 */
