@@ -48,7 +48,7 @@ public class AuthTokenProvider implements TokenProvider {
                 .collect(Collectors.joining(","));
 
         long now = new Date().getTime();
-        Date expiryDate = new Date(now + jwtConfig.getTokenValidityInSeconds());
+        Date expiryDate = new Date(now + jwtConfig.getTokenValidityInSeconds() * 1000);
 
         return Jwts.builder()
                 .setSubject(authentication.getName())
@@ -62,7 +62,7 @@ public class AuthTokenProvider implements TokenProvider {
     /** Refresh Token string 생성 */
     private String generateRefreshTokenString(String subject, ProviderType providerType) {
         long now = new Date().getTime();
-        Date expiryDate = new Date(now + jwtConfig.getRefreshTokenValidityInSeconds());
+        Date expiryDate = new Date(now + jwtConfig.getRefreshTokenValidityInSeconds() * 1000);
 
         return Jwts.builder()
                 .setSubject(subject)

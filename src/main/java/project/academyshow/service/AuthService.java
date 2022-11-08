@@ -7,7 +7,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +20,7 @@ import project.academyshow.repository.AcademyRepository;
 import project.academyshow.repository.MemberRepository;
 import project.academyshow.repository.RefreshTokenRepository;
 import project.academyshow.repository.TutorInfoRepository;
+import project.academyshow.security.entity.CustomUserDetails;
 import project.academyshow.security.token.Token;
 import project.academyshow.security.token.TokenProvider;
 import project.academyshow.util.CookieUtil;
@@ -150,8 +150,14 @@ public class AuthService {
 
         List<SimpleGrantedAuthority> authorities =
                 List.of(new SimpleGrantedAuthority(nowMember.get().getRole().toString()));
-        User principal = new User(username, "", authorities);
-        Authentication authentication = new UsernamePasswordAuthenticationToken(principal, "", authorities);
+
+        CustomUserDetails userDetails = CustomUserDetails.builder()
+                .username(claims.getSubject())
+                .providerType(ProviderType.valueOf(claims.get(TokenProvider.PROVIDER_TYPE).toString()))
+                .role(RoleType.valueOf(claims.get(TokenProvider.AUTHORITIES_KEY).toString()))
+                .build();
+
+        Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, "", authorities);
 
         return tokenProvider.generateToken(authentication);
     }
