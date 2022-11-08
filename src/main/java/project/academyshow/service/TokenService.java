@@ -2,6 +2,7 @@ package project.academyshow.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import project.academyshow.entity.ProviderType;
 import project.academyshow.entity.RefreshToken;
 import project.academyshow.repository.RefreshTokenRepository;
 import project.academyshow.security.config.JwtConfig;
@@ -23,9 +24,12 @@ public class TokenService {
     private final RefreshTokenRepository refreshTokenRepository;
     private final JwtConfig jwtConfig;
 
-    public void updateRefreshToken(HttpServletRequest request, HttpServletResponse response, String username) {
-        Token newRefreshToken = tokenProvider.generateRefreshToken(username);
-        Optional<RefreshToken> oldRefreshToken = refreshTokenRepository.findByUsername(username);
+    public void updateRefreshToken(
+            HttpServletRequest request, HttpServletResponse response, String username, ProviderType providerType
+    ) {
+        Token newRefreshToken = tokenProvider.generateRefreshToken(username, providerType);
+        Optional<RefreshToken> oldRefreshToken =
+                refreshTokenRepository.findByUsernameAndProviderType(username, providerType);
 
         if (oldRefreshToken.isPresent()) {
             oldRefreshToken.get().setToken(newRefreshToken.getToken());
@@ -35,6 +39,7 @@ public class TokenService {
                     RefreshToken.builder()
                             .username(username)
                             .token(newRefreshToken.getToken())
+                            .providerType(providerType)
                             .build());
         }
 

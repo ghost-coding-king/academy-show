@@ -10,7 +10,8 @@ import org.springframework.security.oauth2.core.oidc.OidcIdToken;
 import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.oauth2.core.user.OAuth2User;
-import project.academyshow.entity.Member;
+import project.academyshow.entity.ProviderType;
+import project.academyshow.entity.RoleType;
 
 import java.util.Collection;
 import java.util.List;
@@ -21,7 +22,10 @@ import java.util.Map;
 @AllArgsConstructor
 public class CustomUserDetails implements OAuth2User, UserDetails, OidcUser {
 
-    private final Member member;
+    private String username;
+    private String password;
+    private RoleType role;
+    private ProviderType providerType;
     private Map<String, Object> attributes;
 
     @Override
@@ -31,17 +35,17 @@ public class CustomUserDetails implements OAuth2User, UserDetails, OidcUser {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(member.getRole().toString()));
+        return List.of(new SimpleGrantedAuthority(role.toString()));
     }
 
     @Override
     public String getPassword() {
-        return member.getPassword();
+        return password;
     }
 
     @Override
     public String getUsername() {
-        return member.getUsername();
+        return username;
     }
 
     @Override

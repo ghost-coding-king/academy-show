@@ -7,7 +7,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
+import project.academyshow.entity.ProviderType;
 import project.academyshow.security.config.JwtConfig;
+import project.academyshow.security.entity.CustomUserDetails;
 
 import java.security.Key;
 import java.util.Date;
@@ -34,8 +36,8 @@ public class AuthTokenProvider implements TokenProvider {
     }
 
     /** Refresh Token 생성 */
-    public Token generateRefreshToken(String username) {
-        return new AuthToken(generateRefreshTokenString(username), refreshTokenKey);
+    public Token generateRefreshToken(String username, ProviderType providerType) {
+        return new AuthToken(generateRefreshTokenString(username, providerType), refreshTokenKey);
     }
 
     /** Jwt string 생성 */
@@ -51,18 +53,20 @@ public class AuthTokenProvider implements TokenProvider {
         return Jwts.builder()
                 .setSubject(authentication.getName())
                 .claim(AUTHORITIES_KEY, authorities)
+                .claim(PROVIDER_TYPE, ((CustomUserDetails) authentication.getPrincipal()).getProviderType())
                 .signWith(key, SignatureAlgorithm.HS512)
                 .setExpiration(expiryDate)
                 .compact();
     }
 
     /** Refresh Token string 생성 */
-    private String generateRefreshTokenString(String subject) {
+    private String generateRefreshTokenString(String subject, ProviderType providerType) {
         long now = new Date().getTime();
         Date expiryDate = new Date(now + jwtConfig.getRefreshTokenValidityInSeconds());
 
         return Jwts.builder()
                 .setSubject(subject)
+                .claim(PROVIDER_TYPE, providerType)
                 .signWith(refreshTokenKey, SignatureAlgorithm.HS512)
                 .setExpiration(expiryDate)
                 .compact();

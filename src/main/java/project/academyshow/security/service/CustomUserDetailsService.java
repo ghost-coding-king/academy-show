@@ -6,6 +6,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import project.academyshow.entity.Member;
+import project.academyshow.entity.ProviderType;
 import project.academyshow.repository.MemberRepository;
 import project.academyshow.security.entity.CustomUserDetails;
 
@@ -20,8 +21,14 @@ public class CustomUserDetailsService implements UserDetailsService {
     /** Database 에서 Member 조회 (AuthenticationManager 가 authenticate() 에 사용) */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<Member> byUsername = memberRepository.findByUsername(username);
+        Optional<Member> byUsername = memberRepository.findByUsernameAndProviderType(username, ProviderType.LOCAL);
         byUsername.orElseThrow(() -> new UsernameNotFoundException("Username not found"));
-        return CustomUserDetails.builder().member(byUsername.get()).build();
+        Member member = byUsername.get();
+        return CustomUserDetails.builder()
+                .username(member.getUsername())
+                .password(member.getPassword())
+                .role(member.getRole())
+                .providerType(member.getProviderType())
+                .build();
     }
 }

@@ -95,7 +95,11 @@ public class AuthController {
 
     @PostMapping("/user-info")
     public ApiResponse<?> tokenUserInfo(@AuthenticationPrincipal CustomUserDetails userDetails) {
-        return ApiResponse.success(new LoginInfo(userDetails.getMember()));
+        Optional<Member> member = memberRepository.findByUsernameAndProviderType(
+                userDetails.getUsername(), userDetails.getProviderType()
+        );
+        member.orElseThrow(() -> new UsernameNotFoundException("없는 username 입니다."));
+        return ApiResponse.success(new LoginInfo(member.get()));
     }
 
     @Data

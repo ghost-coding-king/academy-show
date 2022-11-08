@@ -93,8 +93,10 @@ public class AcademyController {
     }
 
     @PostMapping("/academy/{id}/reviews")
-    public ApiResponse<?> createReview(@PathVariable("id") Long id, @RequestBody ReviewRequest request) {
-        return ApiResponse.success(reviewService.create(request, ReferenceType.ACADEMY, id));
+    public ApiResponse<?> createReview(@PathVariable("id") Long id,
+                                       @RequestBody ReviewRequest request,
+                                       @AuthenticationPrincipal CustomUserDetails userDetails) {
+        return ApiResponse.success(reviewService.create(request, ReferenceType.ACADEMY, id, userDetails));
     }
 
     /** 학원 리뷰 별점 통계 */

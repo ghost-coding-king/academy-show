@@ -7,12 +7,11 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
-import project.academyshow.entity.Member;
-import project.academyshow.repository.MemberRepository;
+import project.academyshow.entity.ProviderType;
+import project.academyshow.entity.RoleType;
 import project.academyshow.security.entity.CustomUserDetails;
 import project.academyshow.security.token.Token;
 import project.academyshow.security.token.TokenProvider;
@@ -25,7 +24,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -34,7 +32,6 @@ import java.util.stream.Collectors;
 public class AuthTokenFilter extends OncePerRequestFilter {
 
     private final TokenProvider tokenProvider;
-    private final MemberRepository memberRepository;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -48,8 +45,6 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 
             if (authToken.isValid()) {
                 Claims claims = authToken.getTokenClaims();
-                Optional<Member> member = memberRepository.findByUsername(claims.getSubject());
-                member.orElseThrow(() -> new UsernameNotFoundException("Username not found."));
 
                 List<SimpleGrantedAuthority> authorities =
                 Arrays.stream(claims.get(TokenProvider.AUTHORITIES_KEY).toString().split(","))
@@ -57,7 +52,12 @@ public class AuthTokenFilter extends OncePerRequestFilter {
                 .collect(Collectors.toList());
 
                 /* CustomUserDetails 생성하여 Authentication 등록 */
-                CustomUserDetails userDetails = CustomUserDetails.builder().member(member.get()).build();
+                CustomUserDetails userDetails = CustomUserDetails.builder()
+                        .username(claims.getSubject())
+                        .providerType(ProviderType.valueOf(claims.get(TokenProvider.PROVIDER_TYPE).toString()))
+                        .role(RoleType.valueOf(claims.get(TokenProvider.AUTHORITIES_KEY).toString()))
+                        .build();
+
                 Authentication authentication = new UsernamePasswordAuthenticationToken(
                         userDetails, "", authorities
                 );
