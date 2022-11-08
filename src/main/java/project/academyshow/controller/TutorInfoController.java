@@ -66,8 +66,10 @@ public class TutorInfoController {
     }
 
     @PostMapping("/tutor/{id}/reviews")
-    public ApiResponse<?> createReview(@PathVariable("id") Long id, @RequestBody ReviewRequest request) {
-        return ApiResponse.success(reviewService.create(request, ReferenceType.TUTOR, id));
+    public ApiResponse<?> createReview(@PathVariable("id") Long id,
+                                       @RequestBody ReviewRequest request,
+                                       @AuthenticationPrincipal CustomUserDetails userDetails) {
+        return ApiResponse.success(reviewService.create(request, ReferenceType.TUTOR, id, userDetails));
     }
 
     /** 과외 리뷰 별점 통계 */
