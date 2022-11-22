@@ -311,12 +311,12 @@ public class DbInit {
         }
 
         private void createUp(ReferenceType type, Long referenceId, Member member) {
-            Up up = Up.builder()
+            Likes likes = Likes.builder()
                     .type(type)
                     .referenceId(referenceId)
                     .member(member)
                     .build();
-            em.persist(up);
+            em.persist(likes);
         }
 
         private void createReview(ReferenceType type, Long referenceId, Member member,

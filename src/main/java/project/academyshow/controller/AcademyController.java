@@ -37,7 +37,7 @@ public class AcademyController {
                                     SearchRequest searchRequest, Pageable pageable) {
         Page<AcademySearchResponse> resources = academyService.search(searchRequest, pageable)
                 .map(a -> {
-                    ReferenceUpStatistics upStatistics =
+                    ReferenceLikesStatistics upStatistics =
                             likeService.getLikeInfoByReference(ReferenceType.ACADEMY, a.getId(), user);
                     ReviewStatistics reviewStatistics = academyService.reviewStatistics(a.getId());
                     return new AcademySearchResponse(a, upStatistics, reviewStatistics);
@@ -56,11 +56,11 @@ public class AcademyController {
         private String subAddress;
         private String phone;
 
-        private ReferenceUpStatistics upStatistics;
+        private ReferenceLikesStatistics upStatistics;
         private ReviewStatistics reviewStatistics;
 
         private AcademySearchResponse(Academy academy,
-                                      ReferenceUpStatistics upStatistics,
+                                      ReferenceLikesStatistics upStatistics,
                                       ReviewStatistics reviewStatistics) {
             id = academy.getId();
             name = academy.getName();
@@ -80,7 +80,7 @@ public class AcademyController {
         Optional<Academy> academy = academyService.findById(id);
         if (academy.isPresent()) {
             Academy a = academy.get();
-            ReferenceUpStatistics like = likeService.getLikeInfoByReference(ReferenceType.ACADEMY, a.getId(), userDetails);
+            ReferenceLikesStatistics like = likeService.getLikeInfoByReference(ReferenceType.ACADEMY, a.getId(), userDetails);
             return ApiResponse.success(AcademyResponse.of(a, like));
         }
         else

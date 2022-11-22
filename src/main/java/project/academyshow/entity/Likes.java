@@ -10,7 +10,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Up extends AbstractTimestampEntity {
+public class Likes extends AbstractTimestampEntity {
     @Id
     @GeneratedValue
     private Long id;

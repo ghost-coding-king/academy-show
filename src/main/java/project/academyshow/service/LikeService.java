@@ -3,10 +3,10 @@ package project.academyshow.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import project.academyshow.controller.request.UpRequest;
-import project.academyshow.controller.response.ReferenceUpStatistics;
+import project.academyshow.controller.request.LikesRequest;
+import project.academyshow.controller.response.ReferenceLikesStatistics;
 import project.academyshow.entity.ProviderType;
-import project.academyshow.entity.Up;
+import project.academyshow.entity.Likes;
 
 import project.academyshow.entity.Member;
 import project.academyshow.entity.ReferenceType;
@@ -25,10 +25,10 @@ public class LikeService {
     private final LikeRepository likeRepository;
     private final MemberRepository memberRepository;
 
-    public void createOrDestroy(UpRequest request, CustomUserDetails userDetails) {
+    public void createOrDestroy(LikesRequest request, CustomUserDetails userDetails) {
         Member member = findByUsernameAndProviderType(userDetails.getUsername(), userDetails.getProviderType());
 
-        Optional<Up> like = getLikeByComponentAndMember(
+        Optional<Likes> like = getLikeByComponentAndMember(
                 request.getType(),
                 request.getReferenceId(),
                 member
@@ -40,11 +40,11 @@ public class LikeService {
             likeRepository.save(request.toEntity(member));
     }
 
-    public ReferenceUpStatistics getLikeInfoByReference(ReferenceType type, Long componentId, CustomUserDetails userDetails) {
+    public ReferenceLikesStatistics getLikeInfoByReference(ReferenceType type, Long componentId, CustomUserDetails userDetails) {
         if(Objects.isNull(userDetails))
-            return ReferenceUpStatistics.notAuthenticatedOf(likeCountByReference(type, componentId));
+            return ReferenceLikesStatistics.notAuthenticatedOf(likeCountByReference(type, componentId));
 
-        return ReferenceUpStatistics.of(likeCountByReference(type, componentId),
+        return ReferenceLikesStatistics.of(likeCountByReference(type, componentId),
                                isLikeClicked(type, componentId, userDetails));
     }
 
@@ -58,7 +58,7 @@ public class LikeService {
         return getLikeByComponentAndMember(type, componentId, member).isPresent();
     }
 
-    private Optional<Up> getLikeByComponentAndMember(ReferenceType type, Long componentId, Member member) {
+    private Optional<Likes> getLikeByComponentAndMember(ReferenceType type, Long componentId, Member member) {
         return likeRepository.findByTypeAndReferenceIdAndMember(type, componentId, member);
     }
 

@@ -21,9 +21,9 @@ public class AcademyResponse {
     private List<String> subjects;
     private List<String> educations;
     private boolean shuttle;
-    private ReferenceUpStatistics upStatistics;
+    private ReferenceLikesStatistics upStatistics;
 
-    public AcademyResponse(Academy academy, ReferenceUpStatistics upStatistics) {
+    public AcademyResponse(Academy academy, ReferenceLikesStatistics upStatistics) {
         id = academy.getId();
         name = academy.getName();
         profile = academy.getProfile();
@@ -38,7 +38,7 @@ public class AcademyResponse {
         this.upStatistics = upStatistics;
     }
 
-    public static AcademyResponse of(Academy academy, ReferenceUpStatistics upStatistics) {
+    public static AcademyResponse of(Academy academy, ReferenceLikesStatistics upStatistics) {
         return new AcademyResponse(academy, upStatistics);
     }
 }
