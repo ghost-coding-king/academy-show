@@ -3,12 +3,19 @@ package project.academyshow.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import project.academyshow.entity.Likes;
 import project.academyshow.entity.Member;
-import project.academyshow.entity.ReferenceType;
 
 import java.util.Optional;
 
 public interface LikeRepository extends JpaRepository<Likes, Long> {
-    Optional<Likes> findByTypeAndReferenceIdAndMember(ReferenceType type, Long referenceId, Member member);
+    Optional<Likes> findByPost_IdAndMember(Long postId, Member member);
 
-    Long countByTypeAndReferenceId(ReferenceType type, Long referenceId);
+    Optional<Likes> findByTutorInfo_IdAndMember(Long tutorId, Member member);
+
+    Optional<Likes> findAcademyLikesByAcademy_IdAndMember(Long academyId, Member member);
+
+    Long countByTutorInfo_Id(Long referenceId);
+
+    Long countByAcademy_Id(Long referenceId);
+
+    Long countByPost_Id(Long referenceId);
 }
