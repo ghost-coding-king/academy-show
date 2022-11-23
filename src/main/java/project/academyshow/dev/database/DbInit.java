@@ -7,6 +7,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import project.academyshow.entity.*;
+import project.academyshow.entity.Likes;
 
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
@@ -311,12 +312,20 @@ public class DbInit {
         }
 
         private void createUp(ReferenceType type, Long referenceId, Member member) {
-            Likes likes = Likes.builder()
-                    .type(type)
-                    .referenceId(referenceId)
-                    .member(member)
-                    .build();
-            em.persist(likes);
+            switch (type) {
+                case TUTOR:
+                    em.persist(
+                        Likes.createTutorInfoLikes(member, em.getReference(TutorInfo.class, referenceId)));
+                    break;
+                case ACADEMY:
+                    em.persist(
+                        Likes.createAcademyLikes(member, em.getReference(Academy.class, referenceId)));
+                    break;
+                case POST:
+                    em.persist(
+                        Likes.createPostLikes(member, em.getReference(Post.class, referenceId)));
+                    break;
+            }
         }
 
         private void createReview(ReferenceType type, Long referenceId, Member member,
