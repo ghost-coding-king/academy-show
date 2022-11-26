@@ -10,7 +10,7 @@ import project.academyshow.controller.request.ReviewRequest;
 import project.academyshow.controller.request.SearchRequest;
 import project.academyshow.controller.response.ApiResponse;
 import project.academyshow.controller.response.PostResponse;
-import project.academyshow.controller.response.ReferenceUpStatistics;
+import project.academyshow.controller.response.ReferenceLikesStatistics;
 import project.academyshow.controller.response.ReviewStatistics;
 import project.academyshow.entity.ReferenceType;
 import project.academyshow.entity.TutorInfo;
@@ -40,7 +40,7 @@ public class TutorInfoController {
                                     SearchRequest searchRequest, Pageable pageable) {
         Page<TutorInfoSearchResponse> resources = tutorInfoService.search(searchRequest, pageable)
                 .map(a -> {
-                    ReferenceUpStatistics upStatistics =
+                    ReferenceLikesStatistics upStatistics =
                             likeService.getLikeInfoByReference(ReferenceType.ACADEMY, a.getId(), user);
                     ReviewStatistics reviewStatistics = tutorInfoService.reviewStatistics(a.getId());
                     return new TutorInfoSearchResponse(a, upStatistics, reviewStatistics);
@@ -53,7 +53,7 @@ public class TutorInfoController {
         Optional<TutorInfo> tutorInfo = tutorInfoService.findById(id);
         if (tutorInfo.isPresent()) {
             TutorInfo a = tutorInfo.get();
-            ReferenceUpStatistics like = likeService.getLikeInfoByReference(ReferenceType.TUTOR, a.getId(), userDetails);
+            ReferenceLikesStatistics like = likeService.getLikeInfoByReference(ReferenceType.TUTOR, a.getId(), userDetails);
             return ApiResponse.success(new TutorInfoResponse(a, like));
         }
         else
@@ -98,11 +98,11 @@ public class TutorInfoController {
         private String area;
         private String phone;
 
-        private ReferenceUpStatistics upStatistics;
+        private ReferenceLikesStatistics upStatistics;
         private ReviewStatistics reviewStatistics;
 
         private TutorInfoSearchResponse(TutorInfo tutorInfo,
-                                        ReferenceUpStatistics upStatistics,
+                                        ReferenceLikesStatistics upStatistics,
                                         ReviewStatistics reviewStatistics) {
             id = tutorInfo.getId();
             name = tutorInfo.getMember().getName();
@@ -132,10 +132,10 @@ public class TutorInfoController {
         private List<String> subjects;
         private List<String> educations;
 
-        private ReferenceUpStatistics upStatistics;
+        private ReferenceLikesStatistics upStatistics;
 
         private TutorInfoResponse(TutorInfo tutorInfo,
-                                  ReferenceUpStatistics upStatistics) {
+                                  ReferenceLikesStatistics upStatistics) {
             id = tutorInfo.getId();
             name = tutorInfo.getMember().getName();
             title = tutorInfo.getTitle();
