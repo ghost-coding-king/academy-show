@@ -309,6 +309,7 @@ public class DbInit {
                     .build();
 
             em.persist(post);
+            em.persist(BatchLikes.of(post));
         }
 
         private void createUp(ReferenceType type, Long referenceId, Member member) {
@@ -357,6 +358,7 @@ public class DbInit {
                     .build();
 
             em.persist(tutorInfo);
+            em.persist(BatchLikes.of(tutorInfo));
         }
 
         private void createAcademy(Member member, String[] academyInfo) {
@@ -377,6 +379,7 @@ public class DbInit {
                     .build();
 
             em.persist(academy);
+            em.persist(BatchLikes.of(academy));
             academies.add(academy);
         }
 

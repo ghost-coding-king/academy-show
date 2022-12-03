@@ -65,6 +65,12 @@ spring:
     restart:
       enabled: true
 
+  batch:
+    job:
+      enabled: false
+    jdbc:
+      initialize-schema: never
+
 logging.level:
   project.academyshow: debug
   org.hibernate.SQL: debug
