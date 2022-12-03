@@ -22,6 +22,10 @@ public class Likes {
     private Member member;
 
     @ManyToOne
+    @JoinColumn(name = "batch_likes_id")
+    private BatchLikes batchLikes;
+
+    @ManyToOne
     @JoinColumn(name = "post_id")
     private Post post;
 
@@ -40,6 +44,7 @@ public class Likes {
         return Likes.builder()
                 .member(member)
                 .post(post)
+                .batchLikes(post.getBatchLikes())
                 .build();
     }
 
@@ -47,6 +52,7 @@ public class Likes {
         return Likes.builder()
                 .member(member)
                 .academy(academy)
+                .batchLikes(academy.getBatchLikes())
                 .build();
     }
 
@@ -54,6 +60,7 @@ public class Likes {
         return Likes.builder()
                 .member(member)
                 .tutorInfo(tutorInfo)
+                .batchLikes(tutorInfo.getBatchLikes())
                 .build();
     }
 }
