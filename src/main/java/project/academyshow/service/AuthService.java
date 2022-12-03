@@ -16,10 +16,7 @@ import project.academyshow.controller.request.LoginRequest;
 import project.academyshow.controller.request.TutorRequest;
 import project.academyshow.controller.request.UserSignUpRequest;
 import project.academyshow.entity.*;
-import project.academyshow.repository.AcademyRepository;
-import project.academyshow.repository.MemberRepository;
-import project.academyshow.repository.RefreshTokenRepository;
-import project.academyshow.repository.TutorInfoRepository;
+import project.academyshow.repository.*;
 import project.academyshow.security.entity.CustomUserDetails;
 import project.academyshow.security.token.Token;
 import project.academyshow.security.token.TokenProvider;
@@ -49,6 +46,7 @@ public class AuthService {
     private final RefreshTokenRepository refreshTokenRepository;
     private final AcademyRepository academyRepository;
     private final TutorInfoRepository tutorInfoRepository;
+    private final BatchLikesRepository batchLikesRepository;
     private final static long THREE_DAYS_IN_MILLISECONDS = 259200000;
 
     /** 일반 회원가입 */
@@ -61,7 +59,9 @@ public class AuthService {
         /* 회원 기본 정보 */
         Member savedMember = memberRepository.save(userInfo.toEntity(passwordEncoder, RoleType.ROLE_ACADEMY));
         /* 학원 정보 */
-        academyRepository.save(academyInfo.toEntity(savedMember));
+        Academy academy = academyRepository.save(academyInfo.toEntity(savedMember));
+        /* 배치 좋아요 정보*/
+        batchLikesRepository.save(BatchLikes.of(academy));
     }
 
     /** 과외 회원가입 */
@@ -69,7 +69,9 @@ public class AuthService {
         /* 회원 기본 정보 */
         Member savedMember = memberRepository.save(userInfo.toEntity(passwordEncoder, RoleType.ROLE_TUTOR));
         /* 과외 정보 */
-        tutorInfoRepository.save(tutorRequest.toEntity(savedMember));
+        TutorInfo tutorInfo = tutorInfoRepository.save(tutorRequest.toEntity(savedMember));
+        /* 배치 좋아요 정보*/
+        batchLikesRepository.save(BatchLikes.of(tutorInfo));
     }
 
     /** username 중복 확인 */
