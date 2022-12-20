@@ -58,20 +58,21 @@ public class AuthService {
     public void academySignUp(UserSignUpRequest userInfo, AcademyInfo academyInfo) {
         /* 회원 기본 정보 */
         Member savedMember = memberRepository.save(userInfo.toEntity(passwordEncoder, RoleType.ROLE_ACADEMY));
+
+        BatchLikes batchLikes = batchLikesRepository.save(new BatchLikes());
+
         /* 학원 정보 */
-        Academy academy = academyRepository.save(academyInfo.toEntity(savedMember));
-        /* 배치 좋아요 정보*/
-        batchLikesRepository.save(BatchLikes.of(academy));
+        Academy academy = academyRepository.save(academyInfo.toEntity(savedMember, batchLikes));
     }
 
     /** 과외 회원가입 */
     public void tutorSignUp(UserSignUpRequest userInfo, TutorRequest tutorRequest) {
         /* 회원 기본 정보 */
         Member savedMember = memberRepository.save(userInfo.toEntity(passwordEncoder, RoleType.ROLE_TUTOR));
+
+        BatchLikes batchLikes = batchLikesRepository.save(new BatchLikes());
         /* 과외 정보 */
-        TutorInfo tutorInfo = tutorInfoRepository.save(tutorRequest.toEntity(savedMember));
-        /* 배치 좋아요 정보*/
-        batchLikesRepository.save(BatchLikes.of(tutorInfo));
+        TutorInfo tutorInfo = tutorInfoRepository.save(tutorRequest.toEntity(savedMember, batchLikes));
     }
 
     /** username 중복 확인 */
