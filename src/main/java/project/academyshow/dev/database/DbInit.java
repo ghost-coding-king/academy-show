@@ -30,8 +30,8 @@ public class DbInit {
         exampleInsert.insertAcademyMemberAndAcademy();
         exampleInsert.insertTutorMemberAndTutorInfo();
         exampleInsert.insertAcademyReview();
-        exampleInsert.insertUp();
         exampleInsert.insertAcademyNews();
+        exampleInsert.insertUp();
     }
 
     @Component
@@ -46,6 +46,7 @@ public class DbInit {
         private final List<Member> academyMembers = new ArrayList<>();
         private final List<Member> tutorMembers = new ArrayList<>();
         private final List<Academy> academies = new ArrayList<>();
+        private final List<Post> posts = new ArrayList<>();
 
         /** 과목 데이터 */
         public void insertSubject() {
@@ -258,8 +259,9 @@ public class DbInit {
             );
         }
 
-        /** 학원 데이터 */
+
         public void insertUp() {
+            /** 학원 데이터 */
             createUp(ReferenceType.ACADEMY, academies.get(0).getId(), normalMembers.get(0));
             createUp(ReferenceType.ACADEMY, academies.get(0).getId(), normalMembers.get(1));
             createUp(ReferenceType.ACADEMY, academies.get(1).getId(), normalMembers.get(1));
@@ -274,6 +276,22 @@ public class DbInit {
             createUp(ReferenceType.ACADEMY, academies.get(0).getId(), tutorMembers.get(0));
             createUp(ReferenceType.ACADEMY, academies.get(1).getId(), tutorMembers.get(0));
             createUp(ReferenceType.ACADEMY, academies.get(2).getId(), tutorMembers.get(0));
+
+            /** post(게시물) 데이터 */
+            createUp(ReferenceType.POST, posts.get(0).getId(), normalMembers.get(0));
+            createUp(ReferenceType.POST, posts.get(0).getId(), normalMembers.get(1));
+            createUp(ReferenceType.POST, posts.get(1).getId(), normalMembers.get(1));
+            createUp(ReferenceType.POST, posts.get(2).getId(), normalMembers.get(2));
+            createUp(ReferenceType.POST, posts.get(2).getId(), normalMembers.get(3));
+            createUp(ReferenceType.POST, posts.get(0).getId(), academyMembers.get(0));
+            createUp(ReferenceType.POST, posts.get(1).getId(), academyMembers.get(1));
+            createUp(ReferenceType.POST, posts.get(2).getId(), academyMembers.get(2));
+            createUp(ReferenceType.POST, posts.get(3).getId(), academyMembers.get(3));
+            createUp(ReferenceType.POST, posts.get(4).getId(), academyMembers.get(4));
+            createUp(ReferenceType.POST, posts.get(5).getId(), academyMembers.get(5));
+            createUp(ReferenceType.POST, posts.get(0).getId(), tutorMembers.get(0));
+            createUp(ReferenceType.POST, posts.get(1).getId(), tutorMembers.get(0));
+            createUp(ReferenceType.POST, posts.get(2).getId(), tutorMembers.get(0));
         }
 
         /** 학원 소식 데이터 */
@@ -299,6 +317,9 @@ public class DbInit {
         /** ==================================================================================================== */
 
         private void createAcademyNews(Academy academy, String title, String content) {
+            BatchLikes batchLikes = new BatchLikes();
+            em.persist(batchLikes);
+
             Post post = Post.builder()
                     .academy(academy)
                     .member(academy.getMember())
@@ -306,10 +327,11 @@ public class DbInit {
                     .content(content)
                     .category(PostCategory.ACADEMY_NEWS)
                     .tutorInfo(null)
+                    .batchLikes(batchLikes)
                     .build();
 
             em.persist(post);
-            em.persist(BatchLikes.of(post));
+            posts.add(post);
         }
 
         private void createUp(ReferenceType type, Long referenceId, Member member) {
@@ -344,6 +366,9 @@ public class DbInit {
         }
 
         private void createTutorInfo(Member member, String[] info) {
+            BatchLikes batchLikes = new BatchLikes();
+            em.persist(batchLikes);
+
             TutorInfo tutorInfo = TutorInfo.builder()
                     .member(member)
                     .scholarship(info[0])
@@ -355,13 +380,16 @@ public class DbInit {
                     .area(info[5])
                     .isExposed(true)
                     .phone(info[6])
+                    .batchLikes(batchLikes)
                     .build();
 
             em.persist(tutorInfo);
-            em.persist(BatchLikes.of(tutorInfo));
         }
 
         private void createAcademy(Member member, String[] academyInfo) {
+            BatchLikes batchLikes = new BatchLikes();
+            em.persist(batchLikes);
+
             Academy academy = Academy.builder()
                     .member(member)
                     .businessRegistration("사업자등록증 파일 경로")
@@ -376,10 +404,10 @@ public class DbInit {
                     .subjects(academyInfo[6])
                     .profile(academyInfo[7])
                     .phone(academyInfo[8])
+                    .batchLikes(batchLikes)
                     .build();
 
             em.persist(academy);
-            em.persist(BatchLikes.of(academy));
             academies.add(academy);
         }
 

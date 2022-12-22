@@ -31,7 +31,7 @@ public class TutorInfo {
 
     private String introduce;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
@@ -43,10 +43,11 @@ public class TutorInfo {
 
     private String phone;
 
-    @OneToMany(mappedBy = "tutorInfo", fetch = FetchType.LAZY)
-    private List<BatchLikes> batchLikes;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "batch_likes_id")
+    private BatchLikes batchLikes;
 
     public BatchLikes getBatchLikes() {
-        return batchLikes.get(0);
+        return batchLikes;
     }
 }

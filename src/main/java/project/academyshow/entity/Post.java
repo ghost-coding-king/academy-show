@@ -18,7 +18,7 @@ public class Post extends AbstractTimestampEntity {
     @Id @GeneratedValue
     private Long id;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "member_id")
     private Member member;
 
@@ -38,8 +38,9 @@ public class Post extends AbstractTimestampEntity {
     @JoinColumn(name = "tutor_info_id")
     private TutorInfo tutorInfo;
 
-    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY)
-    private List<BatchLikes> batchLikes;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "batch_likes_id")
+    private BatchLikes batchLikes;
 
     public String profileOfAcademy() {
         return academy.getProfile();
@@ -55,9 +56,5 @@ public class Post extends AbstractTimestampEntity {
 
     public String nameOfMember() {
         return member.getName();
-    }
-
-    public BatchLikes getBatchLikes() {
-        return batchLikes.get(0);
     }
 }

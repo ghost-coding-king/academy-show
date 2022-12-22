@@ -6,6 +6,7 @@ import project.academyshow.controller.request.MyInfo;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Builder
@@ -39,11 +40,11 @@ public class Member {
     @Enumerated(EnumType.STRING)
     private MemberStatus status;
 
-    @OneToOne(mappedBy = "member", fetch = FetchType.LAZY)
-    private Academy academy;
+    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
+    private List<Academy> academy;
 
-    @OneToOne(mappedBy = "member", fetch = FetchType.LAZY)
-    private TutorInfo tutorInfo;
+    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
+    private List<TutorInfo> tutorInfo;
 
     /** 내 정보 수정 */
     public void updateMember(MyInfo myInfo) {
@@ -56,5 +57,13 @@ public class Member {
         this.subAddress = myInfo.getSubAddress();
         this.selectRoadAddress = myInfo.isSelectRoadAddress();
         this.profile = myInfo.getProfile();
+    }
+
+    public Academy getAcademy() {
+        return academy.get(0);
+    }
+
+    public TutorInfo getTutorInfo() {
+        return tutorInfo.get(0);
     }
 }

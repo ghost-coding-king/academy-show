@@ -1,6 +1,7 @@
 package project.academyshow.controller.request;
 
 import lombok.Data;
+import project.academyshow.entity.BatchLikes;
 import project.academyshow.entity.Member;
 import project.academyshow.entity.Subject;
 import project.academyshow.entity.TutorInfo;
@@ -16,7 +17,7 @@ public class TutorRequest {
     private String certification;
     private String phone;
 
-    public TutorInfo toEntity(Member member) {
+    public TutorInfo toEntity(Member member, BatchLikes batchLikes) {
         String educations = String.join(",", this.educations);
 
         String subjects = this.subjects.stream()
@@ -30,6 +31,7 @@ public class TutorRequest {
                 .educations(educations)
                 .subjects(subjects)
                 .phone(phone)
+                .batchLikes(batchLikes)
                 .build();
     }
 }

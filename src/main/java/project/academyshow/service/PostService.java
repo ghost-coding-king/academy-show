@@ -7,15 +7,16 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.academyshow.controller.request.PostRequest;
+import project.academyshow.controller.response.PostResponse;
 import project.academyshow.entity.*;
-import project.academyshow.repository.AcademyRepository;
-import project.academyshow.repository.MemberRepository;
-import project.academyshow.repository.PostRepository;
-import project.academyshow.repository.TutorInfoRepository;
+import project.academyshow.repository.*;
 import project.academyshow.security.entity.CustomUserDetails;
 
-import java.util.Optional;
+import java.util.*;
 
+/**
+ * 게시물에 대한 모든 비즈니스 로직을 처리한다.
+ */
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -25,6 +26,7 @@ public class PostService {
     private final TutorInfoRepository tutorInfoRepository;
     private final AcademyRepository academyRepository;
     private final MemberRepository memberRepository;
+    private final LikeRepository likeRepository;
 
     public Post save(PostRequest postRequest, CustomUserDetails userDetails) {
         Member member = memberRepository.findByUsernameAndProviderType(
@@ -44,20 +46,50 @@ public class PostService {
         return null;
     }
 
-    public Page<Post> findAllByAcademy(Long id, Pageable pageable) {
-        return postRepository.findAllByAcademy(id, pageable);
+    public Page<PostResponse> findAll(Pageable pageable) {
+        Page<Post> posts = postRepository.findAll(pageable);
+        return posts.map(post -> PostResponse.of(post, post.getBatchLikes()));
     }
 
-    public Page<Post> findAllByTutorInfo(Long id, Pageable pageable) {
-        return postRepository.findAllByTutorInfo(id, pageable);
+    public Page<PostResponse> findAllByAcademy(Long id, Pageable pageable) {
+        Page<Post> posts = postRepository.findAllByAcademyId(id, pageable);
+        return posts.map(post -> PostResponse.ofList(post, post.getBatchLikes()));
     }
 
-    public Post findById(Long id) {
-        return postRepository.findById(id).orElseThrow(
+    public Page<PostResponse> findAllByTutorInfo(Long id, Pageable pageable) {
+        Page<Post> posts = postRepository.findAllByTutorInfoId(id, pageable);
+        return posts.map(post -> PostResponse.ofList(post, post.getBatchLikes()));
+    }
+
+    public PostResponse findById(Long id, CustomUserDetails userDetails) {
+        Post post = postRepository.findById(id).orElseThrow(
                 () -> new RuntimeException("해당 게시물을 찾을수 없습니다."));
+
+        if(Objects.isNull(userDetails))
+            return PostResponse.of(post, post.getBatchLikes());
+
+        // 현재 로그인한 멤버를 조회한다.
+        Member member = findByUserDetails(userDetails);
+
+        boolean isLiked = Objects.nonNull(postRepository.likedByMemberAndInPost(member, post));
+
+        return PostResponse.ofAuthenticatedRequest(post, post.getBatchLikes(), isLiked);
+
     }
 
     public Page<Post> findAllByCategory(PostCategory category, Pageable pageable) {
         return postRepository.findAllByCategoryOrderByCreatedAtDesc(category, pageable);
+    }
+
+    /**
+     * Member member
+     */
+    private Member findByUserDetails(CustomUserDetails userDetails) {
+        if(Objects.isNull(userDetails))
+            throw new RuntimeException("해당하는 멤버가 없습니다!");
+
+        return memberRepository
+                .findByUsernameAndProviderType(userDetails.getUsername(), userDetails.getProviderType())
+                .orElseThrow(() -> new RuntimeException("해당하는 멤버가 없습니다!"));
     }
 }

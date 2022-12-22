@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 import project.academyshow.controller.request.ReviewRequest;
 import project.academyshow.controller.request.SearchRequest;
 import project.academyshow.controller.response.ApiResponse;
-import project.academyshow.controller.response.PostResponse;
 import project.academyshow.controller.response.ReferenceLikesStatistics;
 import project.academyshow.controller.response.ReviewStatistics;
 import project.academyshow.entity.ReferenceType;
@@ -79,8 +78,9 @@ public class TutorInfoController {
     }
 
     @GetMapping("/tutor/{id}/posts")
-    public ApiResponse<?> findAllPosts(@PathVariable("id") Long id, Pageable pageable) {
-        return ApiResponse.success(postService.findAllByTutorInfo(id, pageable).map(PostResponse::ofList));
+    public ApiResponse<?> findAllPosts(@PathVariable("id") Long id,
+                                       Pageable pageable) {
+        return ApiResponse.success(postService.findAllByTutorInfo(id, pageable));
     }
 
 
