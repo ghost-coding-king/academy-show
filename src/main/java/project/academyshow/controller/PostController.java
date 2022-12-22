@@ -27,14 +27,14 @@ public class PostController {
     }
 
     @GetMapping("/posts/{id}")
-    public ApiResponse<?> findById(@PathVariable Long id) {
-        return ApiResponse.success(PostResponse.of(postService.findById(id)));
+    public ApiResponse<?> findById(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                   @PathVariable Long id) {
+        return ApiResponse.success(postService.findById(id, userDetails));
     }
 
     @GetMapping("/posts")
-    public ApiResponse<?> findAll(PostCategory category, Pageable pageable) {
-        return ApiResponse.success(
-                postService.findAllByCategory(category, pageable)
-                .map(PostResponse::of));
+    public ApiResponse<?> findAll(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                  Pageable pageable) {
+        return ApiResponse.success(postService.findAll(pageable));
     }
 }

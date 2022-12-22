@@ -106,7 +106,8 @@ public class AcademyController {
     }
 
     @GetMapping("/academy/{id}/posts")
-    public ApiResponse<?> findAllPosts(@PathVariable("id") Long id, Pageable pageable) {
-        return ApiResponse.success(postService.findAllByAcademy(id, pageable).map(PostResponse::ofList));
+    public ApiResponse<?> findAllPosts(@PathVariable("id") Long id,
+                                       Pageable pageable) {
+        return ApiResponse.success(postService.findAllByAcademy(id, pageable));
     }
 }

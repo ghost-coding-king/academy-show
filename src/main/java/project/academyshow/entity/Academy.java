@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 @Builder
@@ -40,14 +39,15 @@ public class Academy {
 
     private String phone;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @OneToMany(mappedBy = "academy", fetch = FetchType.LAZY)
-    private List<BatchLikes> batchLikes;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "batch_likes_id")
+    private BatchLikes batchLikes;
 
     public BatchLikes getBatchLikes() {
-        return batchLikes.get(0);
+        return batchLikes;
     }
 }

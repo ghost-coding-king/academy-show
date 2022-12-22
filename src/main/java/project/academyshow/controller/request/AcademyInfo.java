@@ -3,6 +3,7 @@ package project.academyshow.controller.request;
 import lombok.Data;
 import org.springframework.util.StringUtils;
 import project.academyshow.entity.Academy;
+import project.academyshow.entity.BatchLikes;
 import project.academyshow.entity.Member;
 import project.academyshow.entity.Subject;
 
@@ -27,7 +28,7 @@ public class AcademyInfo {
     private String profile;
     private String phone;
 
-    public Academy toEntity(Member savedMember) {
+    public Academy toEntity(Member savedMember, BatchLikes batchLikes) {
         if (!StringUtils.hasText(profile)) profile = null;
 
         String educations = String.join(",", this.educations);
@@ -51,6 +52,7 @@ public class AcademyInfo {
                 .subjects(subjects)
                 .profile(profile)
                 .phone(phone)
+                .batchLikes(batchLikes)
                 .build();
     }
 }
