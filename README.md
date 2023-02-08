@@ -13,25 +13,25 @@
 
 <br>
 
-### Frameworks
+## Frameworks
 
 <img src="https://img.shields.io/badge/Spring Boot-6DB33F?style=flat-square&logo=Spring Boot&logoColor=white"/> <img src="https://img.shields.io/badge/Vue.js-4FC08D?style=flat-square&logo=Vue.js&logoColor=white"/> 
 
 
-### IDE
+## IDE
 
 <img alt="" src ="https://img.shields.io/badge/VSCode-007ACC.svg?&style=flat&logo=Visual Studio Code&logoColor=white"/> <img alt="" src ="https://img.shields.io/badge/IntelliJ-000000.svg?&style=flat&logo=IntelliJ IDEA&logoColor=white"/>
 
-### TECHS
-#### JWT 기반의 사용자 인증
+## TECHS
+### JWT 기반의 사용자 인증
 JWT(JSON WEB TOKEN)는 정보를 JSON을 사용하여 안전하게(손상, 위조여부 확인) 통신하기 위한 개방된 표준입니다. JWT는 웹 애플리케이션에서 인증 및 권한 부여 목적으로 자주 사용되고 있습니다.
 
 JWT는 헤더, 페이로드, 서명의 세 부분으로 구성됩니다. 헤더는 토큰의 유형과 서명에 사용되는 알고리즘을 정의합니다. 페이로드에는 사용자와 관련된 정보와 추가로 필요로 하는 데이터들이 포함됩니다. JWT의 서명은 헤더와 페이로드정보를 기반으로 비밀키를 사용하여 생성됩니다. 이후 수신자가 헤더와 페이로드정보를 기반으로 비밀키를 사용하여 서명을 만든후 jwt토큰의 서명과 비교해보면 위조여부를 확인할수 있습니다.
 
-##### 로컬 계정 인증플로우
+### 로컬 계정 인증플로우
 ![Github_Logo](./docs/jwt-workflow1.png)  
 
-##### 소셜 계정 (네이버) 사용시, 토큰과 분리된 프론트엔드(리액트, 뷰...) 에서의 jwt 인증플로우
+### 소셜 계정 (네이버) 사용시, 토큰과 분리된 프론트엔드(리액트, 뷰...) 에서의 jwt 인증플로우
 ![Github_Logo](./docs/jwt-workflow2.png)
 - 먼저 백엔드의 소셜로그인을 위한 API로 요청을 보냅니다.
 - 향후 백엔드에서 토큰발행후 원래의 프론트로 리다이렉트 할수 있도록 쿠키 설정 (authorizationRequestRepository)
@@ -48,7 +48,7 @@ jwt 인증과정에서 엑세스토큰과 리프레시토큰을 사용하는 전
 
 또한 리프레시 요청시 엑세스토큰은 헤더에 Authorization 키로 설정하고 리프레시토큰은 쿠키로 설정하여 요청하도록 되어있습니다. 두종류의 토큰이 모두 있어야만 리프레시 요청이 가능하므로, csrf와 xss 공격에 대해 동시에 보완을 해보려 노력했습니다. 또한 리프레시 토큰은 데이터베이스에서 관리하므로, 리프레시 토큰이 탈취되거나 해당 유저가 부정을 저지르면 데이터베이스 레벨 에서 토큰을 무효화시킬수 있도록 구현했습니다.
 
-##### JWT의 특징을 공부하여 다음과 같이 정리해봤습니다.
+### JWT의 특징을 공부한후 다음과 같이 정리해봤습니다.
 - JWT는 Stateless 합니다. 인증에 필요한 모든 정보를 토큰에 자체적으로 저장할수 있고, 서명으로 이를 검증할수 있으므로 데이터베이스 요청없이 인증이 가능합니다. 따라서 시스템 아키텍처를 단순화하고 서버의 부하를 줄일 수 있습니다. 다만 토큰이 한번 발행되면 토큰을 무력화시킬수 없으므로 취약점이 있습니다.
 - JWT는 인증/인가 서버를 넘어서서 어떤 서버에서도 처리와 생성이 가능하므로 탈중앙화된 특징이 있어서 마이크로서비스에 유리합니다.
 - JWT는 JSON 이고, 이를 지원하는 언어와 라이브러리가 많아서 범용성이 높습니다. (웹, 앱 등등등)
